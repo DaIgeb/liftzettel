@@ -1,0 +1,20 @@
+[
+  {
+    "countryCode": "CH",
+    "stateCode": "ZH",
+    "zipCode": "8000",
+    "name": "Zürich"
+  },
+  {
+    "countryCode": "CH",
+    "stateCode": "ZH",
+    "zipCode": "8400",
+    "name": "Winterthur"
+  },
+  {
+    "countryCode": "CH",
+    "stateCode": "TG",
+    "zipCode": "8500",
+    "name": "Frauenfeld"
+  }
+]

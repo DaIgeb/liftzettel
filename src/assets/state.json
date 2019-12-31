@@ -1,0 +1,17 @@
+[
+  {
+    "countryIsoCode": "CH",
+    "code": "ZH",
+    "name": "Zürich"
+  },
+  {
+    "countryIsoCode": "CH",
+    "code": "TI",
+    "name": "Tessin"
+  },
+  {
+    "countryIsoCode": "CH",
+    "code": "TG",
+    "name": "Thurgau"
+  }
+]

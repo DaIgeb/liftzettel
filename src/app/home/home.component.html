@@ -1,0 +1,37 @@
+<mat-card class="example-card">
+  <mat-card-content>
+    <!--<form [formGroup]="formGroup" connect="encloseSelection">-->
+    <form [formGroup]="formGroup">
+      <div>
+        <mat-form-field class="full-width">
+          <input matInput placeholder="Country" aria-label="Country" [matAutocomplete]="autoCountry"
+            formControlName="country">
+          <mat-autocomplete #autoCountry="matAutocomplete" [displayWith]="displayCountry">
+            <mat-option *ngFor="let country of filteredCountries$ | async" [value]="country">
+              <span>{{country.name}}</span>
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="state-width">
+          <input matInput placeholder="State" aria-label="State" [matAutocomplete]="autoState" formControlName="state">
+          <mat-autocomplete #autoState="matAutocomplete" [displayWith]="displayState">
+            <mat-option *ngFor="let state of filteredStates$ | async" [value]="state">
+              <span>{{state.name}}</span> | <span>{{state.code}}</span>
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field class="city-width">
+          <input matInput placeholder="City" aria-label="City" [matAutocomplete]="autoCity" formControlName="city">
+          <mat-autocomplete #autoCity="matAutocomplete" [displayWith]="displayCity">
+            <mat-option *ngFor="let city of filteredCities$ | async" [value]="city">
+              <span>{{city.zipCode}}</span> | <span>{{city.name}}</span>
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
