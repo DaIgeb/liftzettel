@@ -28,7 +28,6 @@ export class CountryService {
 
     // This is one alternative source for a list of all countries
     return this.http.get<TGeonames>('http://api.geonames.org/countryInfoJSON?formatted=false&lang=de&username=liftzettel&style=full').pipe(
-      tap(items => console.log(items)),
       map(items => items.geonames.map(c => ({
         isoCode: c.countryCode,
         name: c.countryName

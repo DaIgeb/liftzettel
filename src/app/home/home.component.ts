@@ -111,7 +111,6 @@ export class HomeComponent implements OnInit {
       );
 
     const availableCities$ = combineLatest(this.store.select(s => s.cities.items), currentCountryCode$, currentStateCode$).pipe(
-      tap(items => console.log(items)),
       map(items => items[0].filter(i => i.countryCode === items[1] && (!items[2] || i.stateCode === items[2])))
     );
 
