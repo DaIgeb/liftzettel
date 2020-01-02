@@ -1,18 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { StateInputComponent } from './state-input/state-input.component';
+import { StreetInputComponent } from './street-input/street-input.component';
 import { MaterialModule } from '../material.module';
 
 
 
 @NgModule({
-  declarations: [StateInputComponent],
+  declarations: [StreetInputComponent],
   imports: [
     CommonModule,
     MaterialModule
   ],
   exports: [
-    StateInputComponent
+    StreetInputComponent
   ]
 })
-export class StateModule { }
+export class StreetModule { }

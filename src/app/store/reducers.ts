@@ -4,6 +4,7 @@ import { routerReducer } from '@angular-redux/router';
 import { countryReducer } from '../country/reducer';
 import { cityReducer } from '../city/reducer';
 import { stateReducer } from '../state/reducer';
+import { streetReducer } from '../street/reducer';
 
 
 export const rootReducer = composeReducers(
@@ -12,6 +13,7 @@ export const rootReducer = composeReducers(
     countries: countryReducer,
     cities: cityReducer,
     states: stateReducer,
+    streets: streetReducer,
     router: routerReducer,
   }),
 );

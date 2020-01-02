@@ -2,5 +2,9 @@
   {
     "name":"Switzerland",
     "isoCode": "CH"
+  },
+  {
+    "name":"Germany",
+    "isoCode": "DE"
   }
 ]

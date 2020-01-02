@@ -1,4 +1,5 @@
 export interface ICity {
+  code: string;
   countryCode: string;
   stateCode: string;
   zipCode: string;

@@ -1,11 +1,22 @@
 .full-width {
-  width: 100%;
+  flex: 3;
+  // min-width: 200px;
 }
 
 .state-width {
-  width: 20%;
+  flex: 1;
 }
 
 .city-width {
-  width: 75%;
+  flex: 3;
+}
+
+.container {
+  display: flex;  
+  flex-direction: column;
+}
+.row {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
 }

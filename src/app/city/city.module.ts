@@ -1,12 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { CityInputComponent } from './city-input/city-input.component';
+import { MaterialModule } from '../material.module';
 
 
 
 @NgModule({
-  declarations: [],
+  declarations: [CityInputComponent],
   imports: [
-    CommonModule
+    CommonModule,
+    MaterialModule
+  ],
+  exports: [
+    CityInputComponent
   ]
 })
 export class CityModule { }

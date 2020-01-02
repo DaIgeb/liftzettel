@@ -1,0 +1,8 @@
+<mat-form-field class="full-width">
+  <input matInput placeholder="State" aria-label="State" [matAutocomplete]="autoState" [formControl]="state">
+  <mat-autocomplete #autoState="matAutocomplete" [displayWith]="displayState">
+    <mat-option *ngFor="let state of filteredStates$ | async" [value]="state">
+      <span>{{state.name}}</span> | <span>{{state.code}}</span>
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>

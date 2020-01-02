@@ -1,3 +1,10 @@
 [
-  
+  {
+    "city": "CH-ZH-8000-00",
+    "name": "Bahnhofstrasse"
+  },
+  {
+    "city": "CH-ZH-8000-00",
+    "name": "Rennweg"
+  }
 ]

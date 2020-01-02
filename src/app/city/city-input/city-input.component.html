@@ -1,0 +1,8 @@
+<mat-form-field class="city-width">
+  <input matInput placeholder="City" aria-label="City" [matAutocomplete]="autoCity" [formControl]="city">
+  <mat-autocomplete #autoCity="matAutocomplete" [displayWith]="displayCity">
+    <mat-option *ngFor="let city of filteredCities$ | async" [value]="city">
+      <span>{{city.zipCode}}</span> | <span>{{city.name}}</span>
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>
