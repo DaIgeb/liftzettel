@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Epic } from 'redux-observable';
+import { Epic } from 'redux-observable-es6-compat';
 
 import { of } from 'rxjs';
 import { catchError, filter, map, startWith, switchMap } from 'rxjs/operators';

@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-
-// import { combineEpics } from 'redux-observable';
 import { combineEpics } from 'redux-observable-es6-compat';
 
 import { CountryEpics } from '../country/epics';
