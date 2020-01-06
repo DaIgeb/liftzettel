@@ -1,5 +1,5 @@
 export interface IState {
-  countryIsoCode: string;
+  country: string;
   code: string;
   name: string;
 }
@@ -21,3 +21,11 @@ export const initialState: IStateState = {
   fetched: false,
   error: undefined,
 };
+
+export function isState(obj: any): obj is IState {
+  if (obj.country && obj.code) {
+    return true;
+  }
+
+  return false;
+}

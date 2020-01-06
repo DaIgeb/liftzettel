@@ -23,3 +23,11 @@ export const initialState: ICityState = {
   fetched: false,
   error: undefined,
 };
+
+export function isCity(obj: any): obj is ICity {
+  if (obj.countryCode && obj.stateCode && obj.code && obj.zipCode) {
+    return true;
+  }
+
+  return false;
+}

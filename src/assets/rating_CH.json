@@ -1,0 +1,42 @@
+[
+  {
+    "code":"1",
+    "country": "CH",
+    "state": "ZH",
+    "city": "CH-ZH-8000-00",
+    "street": "Rennweg",
+    "streetNumber":"1",
+    "type": "noise",
+    "rating": 1
+  },
+  {
+    "code":"2",
+    "country": "CH",
+    "state": "ZH",
+    "city": "CH-ZH-8000-00",
+    "street": "Rennweg",
+    "streetNumber":"2",
+    "type": "noise",
+    "rating": 1
+  },
+  {
+    "code":"3",
+    "country": "CH",
+    "state": "ZH",
+    "city": "CH-ZH-8000-00",
+    "street": "Bahnhofstrasse",
+    "streetNumber":"2",
+    "type": "noise",
+    "rating": 1
+  },
+  {
+    "code":"4",
+    "country": "CH",
+    "state": "ZH",
+    "city": "CH-ZH-8400-00",
+    "street": "Bahnhofstrasse",
+    "streetNumber":"2",
+    "type": "noise",
+    "rating": 1
+  }
+]

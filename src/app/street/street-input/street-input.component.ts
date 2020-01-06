@@ -1,12 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { IStreet } from '../model';
+import { IStreet, isStreet } from '../model';
 import { Observable, combineLatest } from 'rxjs';
 import { FormControl, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { ICity } from 'src/app/city/model';
 import { NgRedux } from '@angular-redux/store';
 import { AppState } from 'src/app/store/model';
 import { StreetAPIActions } from '../actions';
-import { filter, first, map } from 'rxjs/operators';
+import { filter, first, map, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-street-input',
@@ -26,7 +26,7 @@ export class StreetInputComponent implements OnInit, ControlValueAccessor {
   street = new FormControl('Bahnhofstrasse');
 
   @Input()
-  city$: Observable<ICity>;
+  city$: Observable<string>;
 
   constructor(
     private store: NgRedux<AppState>,
@@ -36,21 +36,18 @@ export class StreetInputComponent implements OnInit, ControlValueAccessor {
 
   ngOnInit() {
     this.store.dispatch(this.streetActions.load());
-    this.street.valueChanges.subscribe(v => this.onChanged(v));
+    this.street.valueChanges.subscribe(v => this.onChanged(isStreet(v) ? v.name : undefined));
 
     const streets$ = this.store.select(s => s.streets.items);
-    streets$.pipe(
-      filter(items => items.length > 0),
-      first()
-    ).subscribe(items => this.street.patchValue(items.find(i => i.city === 'CH-ZH-8000-00' && i.name === 'Bahnhofstrasse')));
+    
     const availableStreets$ = combineLatest(streets$, this.city$).pipe(
-      map(items => items[0].filter(i => i.city === items[1].code))
+      map(items => items[0].filter(i => i.city === items[1]))
     );
 
     this.filteredStreets$ =
       combineLatest(this.street.valueChanges, availableStreets$).pipe(
         map(data => {
-          const currentValue = data[0].toLocaleLowerCase ? data[0].toLocaleLowerCase() : data[0].zipCode.toLocaleLowerCase();
+          const currentValue = data[0].toLocaleLowerCase ? data[0].toLocaleLowerCase() : data[0].name.toLocaleLowerCase();
           const items = data[1];
 
           return items.filter(c =>

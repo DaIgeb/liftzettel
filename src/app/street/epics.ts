@@ -13,10 +13,10 @@ const citiesNotAlreadyFetched = (
   state: AppState,
 ): boolean =>
   (
-    state.cities &&
-    !state.cities.fetched &&
-    !state.cities.loading &&
-    state.cities.items.length === 0
+    state.streets &&
+    !state.streets.fetched &&
+    !state.streets.loading &&
+    state.streets.items.length === 0
   );
 
 

@@ -1,7 +1,7 @@
 <mat-form-field class="full-width">
   <input matInput placeholder="Street" aria-label="Street" [matAutocomplete]="autoStreet" [formControl]="street">
   <mat-autocomplete #autoStreet="matAutocomplete" [displayWith]="displayStreet">
-    <mat-option *ngFor="let street of filteredCities$ | async" [value]="street">
+    <mat-option *ngFor="let street of filteredStreets$ | async" [value]="street">
       <span>{{street.name}}</span>
     </mat-option>
   </mat-autocomplete>

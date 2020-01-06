@@ -20,9 +20,6 @@ type TGeonames= {
   providedIn: 'root'
 })
 export class CountryService {
-  public getAllFromAssets(): Observable<ICountry[]> {
-    return this.http.get<ICountry[]>('./assets/country.json');
-  }
   public getAll(): Observable<ICountry[]> {
     return this.http.get<ICountry[]>('./assets/country.json');
 

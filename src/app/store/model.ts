@@ -2,12 +2,14 @@ import { ICountryState, initialState as initialCountryState } from '../country/m
 import { ICityState, initialState as initialCityState } from '../city/model';
 import { IStateState, initialState as initialStateState } from '../state/model';
 import { IStreetState, initialState as initialStreetState } from '../street/model';
+import { IRatingState, initialState as initialRatingState } from '../rating/model';
 
 export type AppState = {
   countries: ICountryState,
   cities: ICityState,
   states: IStateState,
-  streets: IStreetState
+  streets: IStreetState,
+  ratings: IRatingState
 } &
   Partial<{
     routes: string;
@@ -19,6 +21,7 @@ export function initialAppState(): AppState {
     countries: initialCountryState,
     cities: initialCityState,
     states: initialStateState,
-    streets: initialStreetState
+    streets: initialStreetState,
+    ratings: initialRatingState
   };
 }

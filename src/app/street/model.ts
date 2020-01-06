@@ -20,3 +20,11 @@ export const initialState: IStreetState = {
   fetched: false,
   error: undefined,
 };
+
+export function isStreet(obj: any): obj is IStreet {
+  if (obj.city && obj.name) {
+    return true;
+  }
+
+  return false;
+}

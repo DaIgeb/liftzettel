@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { filter, first, map } from 'rxjs/operators';
+import { filter, first, map, tap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
-import { IState } from '../model';
+import { IState, isState } from '../model';
 import { NgRedux } from '@angular-redux/store';
 import { AppState } from 'src/app/store/model';
 import { StateAPIActions } from '../actions';
@@ -34,25 +34,39 @@ export class StateInputComponent implements OnInit, ControlValueAccessor {
   ) { }
 
   ngOnInit() {
-    this.store.dispatch(this.stateActions.load());    
-    this.state.valueChanges.subscribe(v => this.onChanged(v));
+    this.store.dispatch(this.stateActions.load());
+
+    this.state.valueChanges.pipe(
+      map((v: string | IState | undefined) => {
+        if (!v) {
+          return v;
+        }
+        const currentValue = isState(v) ? v.code : undefined;
+
+        return currentValue;
+      })
+    ).subscribe(v => this.onChanged(v));
 
     const states$ = this.store.select(s => s.states.items);
 
     states$.pipe(
       filter(items => items.length > 0),
       first()
-    ).subscribe(items => this.state.patchValue(items.find(i => i.countryIsoCode === 'CH' && i.code === 'ZH')));
+    ).subscribe(items => this.state.patchValue(items.find(i => i.country === 'CH' && i.code === 'ZH')));
 
 
     const availableStates$ = combineLatest(states$, this.countryCode$).pipe(
-      map(items => items[0].filter(i => i.countryIsoCode === items[1]))
+      map(items => items[0].filter(i => i.country === items[1]))      
     );
 
     this.filteredStates$ =
       combineLatest(this.state.valueChanges, availableStates$).pipe(
         map(data => {
-          const currentValue = data[0].toLocaleLowerCase ? data[0].toLocaleLowerCase() : data[0].code.toLocaleLowerCase();
+          if (!data[0]) {
+            return [];
+          }
+
+          const currentValue = !isState(data[0]) ? data[0].toLocaleLowerCase() : data[0].code.toLocaleLowerCase();
           const items = data[1];
 
           return items.filter(c =>
@@ -78,6 +92,10 @@ export class StateInputComponent implements OnInit, ControlValueAccessor {
   }
 
   displayState(state: IState) {
-    return state.code;
+    if (state && state.code) {
+      return state.code;
+    }
+
+    return 'None';
   }
 }

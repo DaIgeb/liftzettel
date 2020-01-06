@@ -5,6 +5,7 @@ import { countryReducer } from '../country/reducer';
 import { cityReducer } from '../city/reducer';
 import { stateReducer } from '../state/reducer';
 import { streetReducer } from '../street/reducer';
+import { ratingReducer } from '../rating/reducer';
 
 
 export const rootReducer = composeReducers(
@@ -15,5 +16,6 @@ export const rootReducer = composeReducers(
     states: stateReducer,
     streets: streetReducer,
     router: routerReducer,
+    ratings: ratingReducer
   }),
 );

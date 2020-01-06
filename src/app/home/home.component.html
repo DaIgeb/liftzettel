@@ -8,15 +8,22 @@
       <div class="row">
         <app-state-input formControlName="state" class="state-width" [countryCode$]="countryCode$"></app-state-input>
         &nbsp;
-        <app-city-input formControlName="city" class="city-width" [state$]="state$"></app-city-input>
+        <app-city-input formControlName="city" class="city-width" [country$]="countryCode$" [state$]="state$">
+        </app-city-input>
       </div>
       <div class="row">
-        <app-street-input formControlName="street" class="full-width" [city$]="city$"></app-street-input>
+        <app-street-input formControlName="street" class="city-width" [city$]="city$"></app-street-input>
+        &nbsp;
+        <mat-form-field class="state-width">
+          <input matInput placeholder="Street-Number" aria-label="Street-Number" [formControl]="streetNumber">
+        </mat-form-field>
       </div>
 
       <div class="row">
         <button mat-raised-button type="submit" color="primary">Create Review</button>
-        <button mat-raised-button type="button" (click)="displayReviews()">Search Reviews</button>
+        <button mat-raised-button type="button" (click)="displayReviews()" [matBadge]="ratingCount$ | async"
+          matBadgePosition="after" matBadgeColor="accent" [matBadgeHidden]="(ratingCount$ | async) === 0">View ratings
+        </button>
       </div>
     </form>
   </mat-card-content>

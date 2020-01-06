@@ -21,3 +21,10 @@ export const initialState: ICountryState = {
   error: undefined,
 };
 
+export function isCountry(obj: any): obj is ICountry {
+  if (obj.isoCode) {
+    return true;
+  }
+
+  return false;
+}

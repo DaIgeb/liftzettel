@@ -5,6 +5,7 @@ import { CountryEpics } from '../country/epics';
 import { CityEpics } from '../city/epics';
 import { StateEpics } from '../state/epics';
 import { StreetEpics } from '../street/epics';
+import { RatingEpics } from '../rating/epics';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,8 @@ export class RootEpics {
     private countryEpics: CountryEpics,
     private cityEpics: CityEpics,
     private stateEpics: StateEpics,
-    private streetEpics: StreetEpics
+    private streetEpics: StreetEpics,
+    private ratingEpics: RatingEpics
     ) {}
 
   createEpics() {
@@ -23,6 +25,7 @@ export class RootEpics {
       this.cityEpics.createEpic(),
       this.stateEpics.createEpic(),
       this.streetEpics.createEpic(),
+      this.ratingEpics.createEpic(),
     );
   }
 }

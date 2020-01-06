@@ -1,11 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Observable, combineLatest } from 'rxjs';
-import { ICity } from '../model';
+import { ICity, isCity } from '../model';
 import { FormControl, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { NgRedux } from '@angular-redux/store';
 import { AppState } from 'src/app/store/model';
 import { CityAPIActions } from '../actions';
-import { filter, first, map } from 'rxjs/operators';
+import { filter, first, map, tap } from 'rxjs/operators';
 import { IState } from 'src/app/state/model';
 
 @Component({
@@ -27,7 +27,10 @@ export class CityInputComponent implements OnInit, ControlValueAccessor {
   city = new FormControl('Zürich');
 
   @Input()
-  state$: Observable<IState>;
+  state$: Observable<string>;
+
+  @Input()
+  country$: Observable<string>;
 
   constructor(
     private store: NgRedux<AppState>,
@@ -37,15 +40,10 @@ export class CityInputComponent implements OnInit, ControlValueAccessor {
 
   ngOnInit() {
     this.store.dispatch(this.cityActions.load());
-    this.city.valueChanges.subscribe(v => this.onChanged(v));
+    this.city.valueChanges.subscribe(v => this.onChanged(isCity(v) ? v.code : undefined));
 
-    const cities$ = this.store.select(s => s.cities.items);
-    cities$.pipe(
-      filter(items => items.length > 0),
-      first()
-    ).subscribe(items => this.city.patchValue(items.find(i => i.countryCode === 'CH' && i.stateCode === 'ZH' && i.name === 'Zürich')));
-    const availableCities$ = combineLatest(this.store.select(s => s.cities.items), this.state$).pipe(
-      map(items => items[0].filter(i => i.countryCode === items[1].countryIsoCode && i.stateCode === items[1].code))
+    const availableCities$ = combineLatest(this.store.select(s => s.cities.items), this.state$, this.country$).pipe(
+      map(items => items[0].filter(i => i.countryCode === items[2] && i.stateCode === items[1]))
     );
 
     this.filteredCities$ =
@@ -76,6 +74,10 @@ export class CityInputComponent implements OnInit, ControlValueAccessor {
   }
 
   displayCity(city: ICity) {
+    if (!city || !city.countryCode) {
+      return '';
+    }
+
     return city.zipCode + ' | ' + city.name;
   }
 }

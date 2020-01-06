@@ -3,7 +3,7 @@ import { NgRedux } from '@angular-redux/store';
 import { AppState } from 'src/app/store/model';
 import { CountryAPIActions } from '../actions';
 import { Observable, combineLatest } from 'rxjs';
-import { ICountry } from '../model';
+import { ICountry, isCountry } from '../model';
 import { FormControl, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { startWith, filter, first, map } from 'rxjs/operators';
 
@@ -40,7 +40,16 @@ export class CountryInputComponent implements OnInit, ControlValueAccessor {
 
     const countryValueChanges$ = this.country.valueChanges.pipe(startWith(this.defaultValue));
 
-    countryValueChanges$.subscribe(v => this.onChanged(v));
+    countryValueChanges$.pipe(
+      map((v: string | ICountry | undefined) => {
+        if (!v) {
+          return v;
+        }
+        const currentValue = isCountry(v)? v.isoCode : undefined;
+      
+        return currentValue;
+      })
+    ).subscribe(v => this.onChanged(v));
 
     countries$.pipe(
       filter(items => items.length > 0),
