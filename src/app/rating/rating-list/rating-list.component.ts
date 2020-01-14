@@ -36,6 +36,26 @@ export class RatingListComponent implements OnInit {
     this.arrangements$ = combineLatest(this.id$, this.store.select(s => s.arrangements.items)).pipe(
       map(i => i[1].filter(r => r.parent.startsWith(i[0]))));
 
+    this.arrangements$ = combineLatest(this.id$, this.store.select(s => s.arrangements.items), this.store.select(s => s.ratings.items)).pipe(
+      map(i => {
+        const ratingsByParent = i[2].reduce((prev, cur) => {
+          prev[cur.parent] = [
+            ...(prev[cur.parent] || []),
+            cur
+          ]
+          return prev;
+        }, {});
+
+        return i[1].filter(r => r.parent.startsWith(i[0])).map(a => {
+          const ratings = (ratingsByParent[a.code] || []);
+          return ({
+            ...a,
+            rating: ratings.reduce((prev, cur) => prev + cur.rating, 0) / (ratings.length || 1),
+            ratings: ratings
+          });
+        });
+      }));
+
     const arrangementIds$ = this.arrangements$.pipe(map(i => i.map(a => a.code)));
 
     this.ratings$ = combineLatest(arrangementIds$, this.store.select(s => s.ratings.items)).pipe(

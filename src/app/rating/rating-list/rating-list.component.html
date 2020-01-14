@@ -1,5 +1,16 @@
-Arrangements:<br/>
-<pre>{{arrangements$ |async | json}}</pre>
-Ratings:<br/>
+<mat-accordion *ngFor="let arrangement of arrangements$ | async">
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{arrangement.name}}
+      </mat-panel-title>
+      <mat-panel-description>
+        {{arrangement.rating}}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
 
-<pre>{{ratings$ |async | json}}</pre>
+
+    <pre>
+      {{arrangement.ratings | json}}</pre>
+  </mat-expansion-panel>
+</mat-accordion>
