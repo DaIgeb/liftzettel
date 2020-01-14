@@ -1,17 +1,17 @@
 [
   {
-    "country": "CH",
-    "code": "ZH",
+    "parent": "CH",
+    "code": "CH:$:ZH",
     "name": "Zürich"
   },
   {
-    "country": "CH",
-    "code": "TI",
+    "parent": "CH",
+    "code": "CH:$:TI",
     "name": "Tessin"
   },
   {
-    "country": "CH",
-    "code": "TG",
+    "parent": "CH",
+    "code": "CH:$:TG",
     "name": "Thurgau"
   }
 ]

@@ -1,6 +1,6 @@
 export interface IState {
-  country: string;
   code: string;
+  parent: string;
   name: string;
 }
 
@@ -23,7 +23,8 @@ export const initialState: IStateState = {
 };
 
 export function isState(obj: any): obj is IState {
-  if (obj.country && obj.code) {
+  const state = obj as IState;
+  if (state.parent && state.code) {
     return true;
   }
 

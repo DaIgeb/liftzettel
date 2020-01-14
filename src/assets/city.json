@@ -1,22 +1,19 @@
 [
   {
-    "code": "CH-ZH-8000-00",
-    "countryCode": "CH",
-    "stateCode": "ZH",
+    "code": "CH:$:ZH:$:8000:$:00",
+    "parent": "CH:$:ZH",
     "zipCode": "8000",
     "name": "Zürich"
   },
   {
-    "code": "CH-ZH-8400-00",
-    "countryCode": "CH",
-    "stateCode": "ZH",
+    "code": "CH:$:ZH:$:8400:$:00",
+    "parent": "CH:$:ZH",
     "zipCode": "8400",
     "name": "Winterthur"
   },
   {
-    "code": "CH-TG-8500-00",
-    "countryCode": "CH",
-    "stateCode": "TG",
+    "code": "CH:$:TG:$:8500:$:00",
+    "parent": "CH:$:ZH",
     "zipCode": "8500",
     "name": "Frauenfeld"
   }

@@ -12,7 +12,7 @@ export function ratingReducer(
     case RatingAPIActions.LOAD_STARTED:
       return {
         ...state,
-        items: state.items.filter(i => i.country !== action.meta.country),
+        items: state.items.filter(i => i.parent !== action.meta.country),
         loading: true,
         fetched: false,
         error: undefined,
@@ -21,7 +21,7 @@ export function ratingReducer(
       return {
         ...state,
         items: [
-          ...state.items.filter(i => i.country !== action.meta.country),
+          ...state.items.filter(i => i.parent !== action.meta.country),
           ...action.payload
         ],
         loading: false,
@@ -31,7 +31,7 @@ export function ratingReducer(
     case RatingAPIActions.LOAD_FAILED:
       return {
         ...state,
-        items: state.items.filter(i => i.country !== action.meta.country),
+        items: state.items.filter(i => !i.parent.startsWith(action.meta.country)),
         fetched: false,
         loading: false,
         error: action.error,

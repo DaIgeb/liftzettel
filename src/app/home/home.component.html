@@ -8,7 +8,7 @@
       <div class="row">
         <app-state-input formControlName="state" class="state-width" [countryCode$]="countryCode$"></app-state-input>
         &nbsp;
-        <app-city-input formControlName="city" class="city-width" [country$]="countryCode$" [state$]="state$">
+        <app-city-input formControlName="city" class="city-width" [state$]="state$">
         </app-city-input>
       </div>
       <div class="row">
@@ -21,9 +21,14 @@
 
       <div class="row">
         <button mat-raised-button type="submit" color="primary">Create Review</button>
-        <button mat-raised-button type="button" (click)="displayReviews()" [matBadge]="ratingCount$ | async"
-          matBadgePosition="after" matBadgeColor="accent" [matBadgeHidden]="(ratingCount$ | async) === 0">View ratings
-        </button>
+        <a mat-raised-button type="button" [routerLink]="'/rating/' + (filter$ | async)"
+          [state]="{ data: filter$ | async }" [matBadge]="ratingCount$ | async" matBadgePosition="after"
+          matBadgeColor="accent" [matBadgeHidden]="(ratingCount$ | async) === 0">View ratings
+        </a>
+      </div>
+      {{enclosures$ | async | json}}
+      <div *ngFor="let enclosure of enclosures$ | async">
+        {{enclosure | json}}
       </div>
     </form>
   </mat-card-content>

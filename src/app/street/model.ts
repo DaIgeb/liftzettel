@@ -1,5 +1,6 @@
 export interface IStreet {
-  city: string;
+  parent: string;
+  code: string;
   name: string;
 }
 
@@ -22,7 +23,8 @@ export const initialState: IStreetState = {
 };
 
 export function isStreet(obj: any): obj is IStreet {
-  if (obj.city && obj.name) {
+  const street = obj as IStreet;
+  if (street.parent && street.name) {
     return true;
   }
 

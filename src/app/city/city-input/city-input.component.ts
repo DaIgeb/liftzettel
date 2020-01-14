@@ -29,9 +29,6 @@ export class CityInputComponent implements OnInit, ControlValueAccessor {
   @Input()
   state$: Observable<string>;
 
-  @Input()
-  country$: Observable<string>;
-
   constructor(
     private store: NgRedux<AppState>,
     private cityActions: CityAPIActions
@@ -41,9 +38,9 @@ export class CityInputComponent implements OnInit, ControlValueAccessor {
   ngOnInit() {
     this.store.dispatch(this.cityActions.load());
     this.city.valueChanges.subscribe(v => this.onChanged(isCity(v) ? v.code : undefined));
-
-    const availableCities$ = combineLatest(this.store.select(s => s.cities.items), this.state$, this.country$).pipe(
-      map(items => items[0].filter(i => i.countryCode === items[2] && i.stateCode === items[1]))
+    
+    const availableCities$ = combineLatest(this.store.select(s => s.cities.items), this.state$).pipe(
+      map(items => items[0].filter(i => i.parent === items[1]))
     );
 
     this.filteredCities$ =
@@ -74,7 +71,7 @@ export class CityInputComponent implements OnInit, ControlValueAccessor {
   }
 
   displayCity(city: ICity) {
-    if (!city || !city.countryCode) {
+    if (!city || !city.parent) {
       return '';
     }
 

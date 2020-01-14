@@ -1,10 +1,12 @@
 [
   {
-    "city": "CH-ZH-8000-00",
+    "parent": "CH:$:ZH:$:8000:$:00",
+    "code": "CH:$:ZH:$:8000:$:00:$:Bahnhofstrasse",
     "name": "Bahnhofstrasse"
   },
   {
-    "city": "CH-ZH-8000-00",
+    "parent": "CH:$:ZH:$:8000:$:00",
+    "code": "CH:$:ZH:$:8000:$:00:$:Rennweg",
     "name": "Rennweg"
   }
 ]

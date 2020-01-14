@@ -52,11 +52,11 @@ export class StateInputComponent implements OnInit, ControlValueAccessor {
     states$.pipe(
       filter(items => items.length > 0),
       first()
-    ).subscribe(items => this.state.patchValue(items.find(i => i.country === 'CH' && i.code === 'ZH')));
+    ).subscribe(items => this.state.patchValue(items.find(i => i.code === 'CH:$:ZH')));
 
 
     const availableStates$ = combineLatest(states$, this.countryCode$).pipe(
-      map(items => items[0].filter(i => i.country === items[1]))      
+      map(items => items[0].filter(i => i.parent === items[1]))      
     );
 
     this.filteredStates$ =
@@ -66,7 +66,7 @@ export class StateInputComponent implements OnInit, ControlValueAccessor {
             return [];
           }
 
-          const currentValue = !isState(data[0]) ? data[0].toLocaleLowerCase() : data[0].code.toLocaleLowerCase();
+          const currentValue = !isState(data[0]) ? data[0].toLocaleLowerCase() : data[0].parent.toLocaleLowerCase();
           const items = data[1];
 
           return items.filter(c =>
@@ -92,8 +92,8 @@ export class StateInputComponent implements OnInit, ControlValueAccessor {
   }
 
   displayState(state: IState) {
-    if (state && state.code) {
-      return state.code;
+    if (state && state.parent) {
+      return state.parent;
     }
 
     return 'None';

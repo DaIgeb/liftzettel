@@ -36,12 +36,12 @@ export class StreetInputComponent implements OnInit, ControlValueAccessor {
 
   ngOnInit() {
     this.store.dispatch(this.streetActions.load());
-    this.street.valueChanges.subscribe(v => this.onChanged(isStreet(v) ? v.name : undefined));
-
+    this.street.valueChanges.subscribe(v => this.onChanged(isStreet(v) ? v.code : undefined));
+    
     const streets$ = this.store.select(s => s.streets.items);
     
     const availableStreets$ = combineLatest(streets$, this.city$).pipe(
-      map(items => items[0].filter(i => i.city === items[1]))
+      map(items => items[0].filter(i => i.parent === items[1]))
     );
 
     this.filteredStreets$ =

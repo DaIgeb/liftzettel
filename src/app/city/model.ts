@@ -1,7 +1,6 @@
 export interface ICity {
   code: string;
-  countryCode: string;
-  stateCode: string;
+  parent: string;
   zipCode: string;
   name: string;
 }
@@ -25,7 +24,8 @@ export const initialState: ICityState = {
 };
 
 export function isCity(obj: any): obj is ICity {
-  if (obj.countryCode && obj.stateCode && obj.code && obj.zipCode) {
+  const city = obj as ICity;
+  if (city.parent && city.code && city.zipCode) {
     return true;
   }
 

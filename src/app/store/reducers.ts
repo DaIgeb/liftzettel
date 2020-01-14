@@ -6,6 +6,8 @@ import { cityReducer } from '../city/reducer';
 import { stateReducer } from '../state/reducer';
 import { streetReducer } from '../street/reducer';
 import { ratingReducer } from '../rating/reducer';
+import { arrangementReducer } from '../arrangement/reducer';
+import { enclosureReducer } from '../enclosure/reducer';
 
 
 export const rootReducer = composeReducers(
@@ -16,6 +18,8 @@ export const rootReducer = composeReducers(
     states: stateReducer,
     streets: streetReducer,
     router: routerReducer,
-    ratings: ratingReducer
+    ratings: ratingReducer,
+    arrangements: arrangementReducer,
+    enclosures: enclosureReducer
   }),
 );

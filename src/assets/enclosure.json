@@ -1,26 +1,22 @@
 [
   {
     "code":"1",
-    "parent": "CH:$:ZH:$:8000:$:00:$:Rennweg:$:1:$:1",
-    "type": "noise",
-    "rating": 1
+    "parent": "CH:$:ZH:$:8000:$:00:$:Rennweg:$:1",
+    "name": "noise"
   },
   {
     "code":"2",
     "parent": "CH:$:ZH:$:8000:$:00:$:Rennweg:$:2",
-    "type": "noise",
-    "rating": 1
+    "name": "noise"
   },
   {
     "code":"3",
     "parent": "CH:$:ZH:$:8000:$:00:$:Bahnhofstrasse:$:2",
-    "type": "noise",
-    "rating": 1
+    "name": "noise"
   },
   {
     "code":"4",
     "parent": "CH:$:ZH:$:8400:$:00:$:Bahnhofstrasse:$:2",
-    "type": "noise",
-    "rating": 1
+    "name": "noise"
   }
 ]

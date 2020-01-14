@@ -18,6 +18,9 @@ import { CityModule } from './city/city.module';
 import { StateModule } from './state/state.module';
 import { MaterialModule } from './material.module';
 import { StreetModule } from './street/street.module';
+import { RatingModule } from './rating/rating.module';
+import { ArrangementModule } from './arrangement/arrangement.module';
+import { EnclosureModule } from './enclosure/enclosure.module';
 
 @NgModule({
   declarations: [
@@ -40,7 +43,10 @@ import { StreetModule } from './street/street.module';
     CityModule,
     StateModule,
     StreetModule,
+    RatingModule,
     StoreModule,
+    ArrangementModule,
+    EnclosureModule,
     MaterialModule
   ],
   providers: [],

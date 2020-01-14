@@ -1,0 +1,12 @@
+[
+  {
+    "code":"CH:$:ZH:$:8000:$:00:$:Rennweg:$:1:$:1",
+    "parent": "CH:$:ZH:$:8000:$:00:$:Rennweg:$:1",
+    "name": "5th Floor"
+  },
+  {
+    "code":"CH:$:ZH:$:8000:$:00:$:Rennweg:$:1:$:2",
+    "parent": "CH:$:ZH:$:8000:$:00:$:Rennweg:$:1",
+    "name": "Ground Floor"
+  }
+]

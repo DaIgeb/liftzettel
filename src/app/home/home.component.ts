@@ -8,6 +8,8 @@ import { RatingAPIActions } from '../rating/actions';
 import { NgRedux } from '@angular-redux/store';
 import { AppState } from '../store/model';
 import { IRating } from '../rating/model';
+import { EnclosureAPIActions } from '../enclosure/actions';
+import { IEnclosure } from '../enclosure/model';
 
 interface IForm {
   country: string;
@@ -42,13 +44,22 @@ export class HomeComponent implements OnInit {
   city$: Observable<any>;
   ratings$: Observable<IRating[]>;
   ratingCount$: Observable<number>;
+  filter$: Observable<string>;
+  enclosures$: Observable<IEnclosure[]>;
 
   constructor(
     private store: NgRedux<AppState>,
-    private ratingActions: RatingAPIActions
+    private ratingActions: RatingAPIActions,
+    private enclosureActions: EnclosureAPIActions,
   ) { }
 
   ngOnInit() {
+    this.store.dispatch(this.enclosureActions.load());
+
+    this.enclosures$ = combineLatest(this.store.select(s => s.enclosures.items).pipe(filter(e => e && e.length > 0)), this.filter$).pipe(
+      tap(e => console.warn(e)),
+      map(enc => enc[0].filter(e => e.parent.startsWith(enc[1])))
+    );
     const countryValueChanges$ = this.country.valueChanges;
 
     this.countryCode$ = countryValueChanges$;
@@ -69,17 +80,37 @@ export class HomeComponent implements OnInit {
 
     const filter$ = combineLatest(this.countryCode$).pipe(map(i => ({})));
 
-    this.ratings$ = combineLatest<Observable<IRating[]>, Observable<Partial<IForm>>>(this.store.select(s => {
-      return s.ratings.items;
-    }), this.formGroup.valueChanges).pipe(
-      tap(i => console.warn(i[1])),
-      map(i => i[0].filter(r =>
+    this.filter$ = this.formGroup.valueChanges.pipe(
+      map(f => {
+        console.warn("Filter", f)
+        if (f.streetNumber && f.street) {
+          return `${f.street}:$:${f.streetNumber}`;
+        }
+        if (f.street) {
+          return f.street;
+        }
+        if (f.city) {
+          return f.city;
+        }
 
-        (!i[1].country || r.country === i[1].country) &&
-        (!i[1].state || r.state === i[1].state) &&
-        (!i[1].city || r.city === i[1].city) &&
-        (!i[1].street || r.street === i[1].street) &&
-        (!i[1].streetNumber || r.streetNumber === i[1].streetNumber)
+        if (f.state) {
+          return f.state;
+        }
+        if (f.country) {
+          return f.country;
+        }
+
+
+        return "";
+      }),
+      map(f => encodeURI(f))
+    );
+
+    this.ratings$ = combineLatest<Observable<IRating[]>, Observable<string>>(this.store.select(s => {
+      return s.ratings.items;
+    }), this.filter$).pipe(
+      map(i => i[0].filter(r =>
+        r.parent.startsWith(i[1])
       )
       )
     );

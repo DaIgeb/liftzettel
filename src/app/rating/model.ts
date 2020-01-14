@@ -1,10 +1,6 @@
 export interface IRating {
   code: string;
-  country: string;
-  state: string;
-  city: string;
-  street: string;
-  streetNumber: string;
+  parent: string;
   type: string;
   rating: number;
 }
