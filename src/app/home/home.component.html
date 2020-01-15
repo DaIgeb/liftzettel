@@ -20,7 +20,8 @@
       </div>
 
       <div class="row">
-        <button mat-raised-button type="submit" color="primary">Create Review</button>
+        <a mat-raised-button type="button" [routerLink]="'/arrangement/' + (filter$ | async)">Create Review
+        </a>
         <a mat-raised-button type="button" [routerLink]="'/rating/' + (filter$ | async)"
           [state]="{ data: filter$ | async }" [matBadge]="ratingCount$ | async" matBadgePosition="after"
           matBadgeColor="accent" [matBadgeHidden]="(ratingCount$ | async) === 0">View ratings
