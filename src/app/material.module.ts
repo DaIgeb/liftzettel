@@ -13,6 +13,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatBadgeModule } from '@angular/material/badge';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   declarations: [],
@@ -29,6 +30,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatBadgeModule,
     MatCardModule,
     MatExpansionModule,
+    MatTableModule,
     CommonModule,
   ],
   exports: [
@@ -43,6 +45,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatCardModule,    
     MatBadgeModule,
     MatExpansionModule,
+    MatTableModule,
     ReactiveFormsModule
   ]
 })

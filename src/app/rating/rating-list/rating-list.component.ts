@@ -19,6 +19,7 @@ type TArrangement = IArrangement & {
   styleUrls: ['./rating-list.component.scss']
 })
 export class RatingListComponent implements OnInit {
+  displayedColumns = ['type', 'rating'];
   id$: Observable<string>;
   arrangements$: Observable<TArrangement[]>;
 
