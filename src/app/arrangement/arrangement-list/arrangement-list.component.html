@@ -1,15 +1,14 @@
 <mat-nav-list>
   <ng-template ngFor let-arrangment [ngForOf]="arrangements$ | async">
-    <mat-list-item (click)="showInfo(arrangment.code)">
+    <!--<mat-list-item (click)="showInfo(arrangment.code)">-->
+    <mat-list-item  [routerLink]="'/rating/' + arrangment.code + '/new'">
       <mat-icon mat-list-icon>apartment</mat-icon>
 
       <h4 mat-line>{{arrangment.name}}</h4>
       <p mat-line> {{arrangment.code}} </p>
 
-      <button mat-icon-button (click)="showInfo(arrangment.code)">
 
-        <mat-icon mat-list-icon>add</mat-icon>
-      </button>
+      <mat-icon mat-linen>add</mat-icon>
     </mat-list-item>
   </ng-template>
 </mat-nav-list>

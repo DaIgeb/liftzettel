@@ -38,4 +38,8 @@ export class ArrangementListComponent implements OnInit {
         return i[1].filter(r => r.parent.startsWith(i[0]));
       }));
   }
+
+  showInfo(code: string) {
+    alert(code);
+  }
 }
