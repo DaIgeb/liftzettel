@@ -9,14 +9,18 @@ import { IRating } from '../model';
 import { IArrangement } from 'src/app/arrangement/model';
 import { ArrangementAPIActions } from 'src/app/arrangement/actions';
 
+type TArrangement = IArrangement & {
+  ratings: IRating[];
+  rating: number;
+};
+
 @Component({
   templateUrl: './rating-list.component.html',
   styleUrls: ['./rating-list.component.scss']
 })
 export class RatingListComponent implements OnInit {
   id$: Observable<string>;
-  arrangements$: Observable<IArrangement[]>;
-  ratings$: Observable<{ [index: string]: IRating[] }>;
+  arrangements$: Observable<TArrangement[]>;
 
   constructor(
     private store: NgRedux<AppState>,
@@ -33,9 +37,6 @@ export class RatingListComponent implements OnInit {
         decodeURIComponent(params.get('id')))
     );
 
-    this.arrangements$ = combineLatest(this.id$, this.store.select(s => s.arrangements.items)).pipe(
-      map(i => i[1].filter(r => r.parent.startsWith(i[0]))));
-
     this.arrangements$ = combineLatest(this.id$, this.store.select(s => s.arrangements.items), this.store.select(s => s.ratings.items)).pipe(
       map(i => {
         const ratingsByParent = i[2].reduce((prev, cur) => {
@@ -44,7 +45,7 @@ export class RatingListComponent implements OnInit {
             cur
           ]
           return prev;
-        }, {});
+        }, {} as {[index: string]: IRating[]});
 
         return i[1].filter(r => r.parent.startsWith(i[0])).map(a => {
           const ratings = (ratingsByParent[a.code] || []);
@@ -55,19 +56,6 @@ export class RatingListComponent implements OnInit {
           });
         });
       }));
-
-    const arrangementIds$ = this.arrangements$.pipe(map(i => i.map(a => a.code)));
-
-    this.ratings$ = combineLatest(arrangementIds$, this.store.select(s => s.ratings.items)).pipe(
-      map(d => d[1].filter(r => d[0].indexOf(r.parent) > -1)),
-      map(i => i.reduce((prev, cur) => {
-        prev[cur.parent] = [
-          ...(prev[cur.parent] || []),
-          cur
-        ];
-
-        return prev;
-      }, {})));
   }
 
 }
