@@ -8,15 +8,17 @@ import { AppState } from '../store/model';
 import { IEnclosure, IEnclosureError } from './model';
 import { EnclosureAPIAction, EnclosureAPIActions } from './actions';
 import { EnclosureService } from './enclosure.service';
+import { FluxStandardAction } from 'flux-standard-action';
 
 const notAlreadyFetched = (
   state: AppState,
 ): boolean =>
   (
-    state.enclosures &&
-    !state.enclosures.fetched &&
-    !state.enclosures.loading &&
+    state.enclosures && (
+    !state.enclosures.fetched ||
+    !state.enclosures.loading ||
     state.enclosures.items.length === 0
+    )
   );
 
 
@@ -57,8 +59,8 @@ export class EnclosureEpics {
   }
 
   private createSaveEpic(): Epic<
-    EnclosureAPIAction<IEnclosure[] | IEnclosureError> | { type: string; payload: string; },
-    EnclosureAPIAction<IEnclosure[] | IEnclosureError> | { type: string; payload: string; },
+    EnclosureAPIAction<IEnclosure[] | IEnclosureError> | FluxStandardAction<string, string, {}>,
+    EnclosureAPIAction<IEnclosure[] | IEnclosureError> | FluxStandardAction<string, string, {}>,
     AppState
   > {
     return (action$, state$) =>

@@ -55,7 +55,14 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.enclosureActions.load();
+    this.store.select(s => s.enclosures.fetched).subscribe(f => {
+      if (!f) {
+        this.enclosureActions.load();
+      } else {
+        console.warn('Already loaded')
+      }
+    });
+    // this.enclosureActions.load();
 
     const countryValueChanges$ = this.country.valueChanges;
 
@@ -102,6 +109,7 @@ export class HomeComponent implements OnInit {
     const enclosure = this.enclosures.find(i => i.code = filter);
     if (enclosure) {
       console.warn(enclosure);
+
     } else {
       this.enclosureActions.create([{
         parent: filter,

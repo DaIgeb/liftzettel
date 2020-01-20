@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { FluxStandardAction } from 'flux-standard-action';
 
 import { IEnclosure, IEnclosureError } from './model';
+import { UPDATE_LOCATION } from '@angular-redux/router';
 
 export type Payload = IEnclosure[] | IEnclosureError;
 
@@ -65,10 +66,10 @@ export class EnclosureAPIActions {
 
   createSucceeded = (
     payload: IEnclosure[],
-  ): EnclosureAPIAction<IEnclosure[]> => ({
-    type: EnclosureAPIActions.SAVE_SUCCEEDED,
+  ): FluxStandardAction<string, string, {}> => ({
+    type: UPDATE_LOCATION,
     meta: {},
-    payload: payload,
+    payload: 'arrangement/' + payload[0].code,
   });
 
   createStarted = (): EnclosureAPIAction => ({
@@ -76,7 +77,7 @@ export class EnclosureAPIActions {
     meta: {},
   });
 
-  
+
   createFailed = (
     error: IEnclosureError,
   ): EnclosureAPIAction<IEnclosureError> => ({

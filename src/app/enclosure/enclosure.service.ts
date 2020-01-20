@@ -21,7 +21,7 @@ export class EnclosureService {
   }
 
   create(data: IEnclosure[]) {
-    additionalEnclosures.push(data);
+    additionalEnclosures.push(...data);
     
     return of(data);
   }
