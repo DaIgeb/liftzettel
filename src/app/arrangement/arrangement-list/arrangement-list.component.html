@@ -1,20 +1,29 @@
-<mat-nav-list>
-  <ng-template ngFor let-arrangment [ngForOf]="arrangements$ | async">
-    <!--<mat-list-item (click)="showInfo(arrangment.code)">-->
-    <mat-list-item  [routerLink]="'/rating/' + arrangment.code + '/new'">
-      <mat-icon mat-list-icon>apartment</mat-icon>
+<mat-card>
+  <mat-card-content>
+    Enclosure info: 
+    <pre>{{enclosure$ | async | json}}</pre>
+  </mat-card-content>
+</mat-card>
+<mat-card *ngIf="(arrangements$ | async).length > 0">
+  <mat-card-header>
+    <mat-card-title>Existing Arrangements</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-nav-list>
+      <ng-template ngFor let-arrangment [ngForOf]="arrangements$ | async">
+        <!--<mat-list-item (click)="showInfo(arrangment.code)">-->
+        <mat-list-item [routerLink]="'/rating/' + arrangment.code + '/new'">
+          <mat-icon mat-list-icon>apartment</mat-icon>
 
-      <h4 mat-line>{{arrangment.name}}</h4>
-      <p mat-line> {{arrangment.code}} </p>
+          <h4 mat-line>{{arrangment.name}}</h4>
+          <p mat-line> {{arrangment.code}} </p>
 
 
-      <mat-icon mat-linen>add</mat-icon>
-    </mat-list-item>
-  </ng-template>
-</mat-nav-list>
+          <mat-icon mat-linen>add</mat-icon>
+        </mat-list-item>
+      </ng-template>
+    </mat-nav-list>
+  </mat-card-content>
+</mat-card>
 
-<div>
-  <h4>New Arrangement</h4>
-  name: <input />
-
-</div>
+<app-arrangement-create></app-arrangement-create>

@@ -20,14 +20,13 @@
       </div>
 
       <div class="row">
-        <a mat-raised-button type="button" [routerLink]="'/arrangement/' + (filter$ | async)">Create Review
+        <a mat-raised-button type="button" (click)="createReview()">Create Review
         </a>
         <a mat-raised-button type="button" [routerLink]="'/rating/' + (filter$ | async)"
           [state]="{ data: filter$ | async }" [matBadge]="ratingCount$ | async" matBadgePosition="after"
           matBadgeColor="accent" [matBadgeHidden]="(ratingCount$ | async) === 0">View ratings
         </a>
       </div>
-      {{enclosures$ | async | json}}
       <div *ngFor="let enclosure of enclosures$ | async">
         {{enclosure | json}}
       </div>

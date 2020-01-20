@@ -33,6 +33,13 @@ export function enclosureReducer(
         loading: false,
         error: action.error,
       };
+      case EnclosureAPIActions.SAVE_SUCCEEDED: {
+        return {
+          ...state,
+          fetched: false,
+          loading: false
+        }
+      }
   }
 
   return state;

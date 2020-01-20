@@ -21,12 +21,14 @@ import { StreetModule } from './street/street.module';
 import { RatingModule } from './rating/rating.module';
 import { ArrangementModule } from './arrangement/arrangement.module';
 import { EnclosureModule } from './enclosure/enclosure.module';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavigationComponent,
-    HomeComponent
+    HomeComponent,
+    NotFoundComponent
   ],
 
   imports: [

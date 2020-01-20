@@ -1,4 +1,8 @@
-<mat-accordion *ngFor="let arrangement of arrangements$ | async">
+<ng-template [ngIf]="(arrangements$ |async).length === 0">
+  No arrangments found
+</ng-template>
+<ng-template [ngIf]="(arrangements$ |async).length > 0">
+  <mat-accordion *ngFor="let arrangement of arrangements$ | async">
   <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title>
@@ -32,3 +36,4 @@
       
   </mat-expansion-panel>
 </mat-accordion>
+</ng-template>

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Epic } from 'redux-observable-es6-compat';
+import { Epic, combineEpics } from 'redux-observable-es6-compat';
 
 import { of } from 'rxjs';
 import { catchError, filter, map, startWith, switchMap } from 'rxjs/operators';
@@ -13,10 +13,10 @@ const notAlreadyFetched = (
   state: AppState,
 ): boolean =>
   (
-    state.streets &&
-    !state.streets.fetched &&
-    !state.streets.loading &&
-    state.streets.items.length === 0
+    state.enclosures &&
+    !state.enclosures.fetched &&
+    !state.enclosures.loading &&
+    state.enclosures.items.length === 0
   );
 
 
@@ -30,7 +30,9 @@ export class EnclosureEpics {
   ) { }
 
   createEpic() {
-    return this.createLoadEpic();
+    return combineEpics(
+      this.createLoadEpic(),
+      this.createSaveEpic());
   }
 
   private createLoadEpic(): Epic<
@@ -51,6 +53,26 @@ export class EnclosureEpics {
               }),
             )),
             startWith(this.actions.loadStarted()))
+        ));
+  }
+
+  private createSaveEpic(): Epic<
+    EnclosureAPIAction<IEnclosure[] | IEnclosureError> | { type: string; payload: string; },
+    EnclosureAPIAction<IEnclosure[] | IEnclosureError> | { type: string; payload: string; },
+    AppState
+  > {
+    return (action$, state$) =>
+      action$.pipe(
+        filter((a) => a.type === EnclosureAPIActions.SAVE),
+        switchMap((a) =>
+          this.service.create(a.payload as IEnclosure[]).pipe(
+            map(data => this.actions.createSucceeded(data)),
+            catchError(res => of(
+              this.actions.createFailed({
+                status: '' + res.status,
+              }),
+            )),
+            startWith(this.actions.createStarted()))
         ));
   }
 }

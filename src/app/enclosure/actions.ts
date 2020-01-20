@@ -10,7 +10,7 @@ export interface MetaData {
 }
 
 export type EnclosureAPIAction<T extends Payload = IEnclosure[]> = FluxStandardAction<
-  string, 
+  string,
   T,
   MetaData
 >;
@@ -23,23 +23,27 @@ export class EnclosureAPIActions {
   static readonly LOAD_STARTED = '[ENCLOSURE]: LOAD_STARTED';
   static readonly LOAD_SUCCEEDED = '[ENCLOSURE]: LOAD_SUCCEEDED';
   static readonly LOAD_FAILED = '[ENCLOSURE]: LOAD_FAILED';
+  static readonly SAVE = '[ENCLOSURE]: SAVE';
+  static readonly SAVE_STARTED = '[ENCLOSURE]: SAVE_STARTED';
+  static readonly SAVE_SUCCEEDED = '[ENCLOSURE]: SAVE_SUCCEEDED';
+  static readonly SAVE_FAILED = '[ENCLOSURE]: SAVE_FAILED';
 
   @dispatch()
   load = (): EnclosureAPIAction => ({
     type: EnclosureAPIActions.LOAD,
-    meta: { },
+    meta: {},
   });
 
   loadStarted = (): EnclosureAPIAction => ({
     type: EnclosureAPIActions.LOAD_STARTED,
-    meta: { },
+    meta: {},
   });
 
   loadSucceeded = (
     payload: IEnclosure[],
   ): EnclosureAPIAction<IEnclosure[]> => ({
     type: EnclosureAPIActions.LOAD_SUCCEEDED,
-    meta: { },
+    meta: {},
     payload,
   });
 
@@ -47,7 +51,37 @@ export class EnclosureAPIActions {
     error: IEnclosureError,
   ): EnclosureAPIAction<IEnclosureError> => ({
     type: EnclosureAPIActions.LOAD_FAILED,
-    meta: { },
+    meta: {},
+    payload: error,
+    error: true,
+  });
+
+  @dispatch()
+  create = (data: IEnclosure[]): EnclosureAPIAction => ({
+    type: EnclosureAPIActions.SAVE,
+    meta: {},
+    payload: data
+  });
+
+  createSucceeded = (
+    payload: IEnclosure[],
+  ): EnclosureAPIAction<IEnclosure[]> => ({
+    type: EnclosureAPIActions.SAVE_SUCCEEDED,
+    meta: {},
+    payload: payload,
+  });
+
+  createStarted = (): EnclosureAPIAction => ({
+    type: EnclosureAPIActions.SAVE_STARTED,
+    meta: {},
+  });
+
+  
+  createFailed = (
+    error: IEnclosureError,
+  ): EnclosureAPIAction<IEnclosureError> => ({
+    type: EnclosureAPIActions.SAVE_FAILED,
+    meta: {},
     payload: error,
     error: true,
   });
