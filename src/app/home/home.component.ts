@@ -95,7 +95,7 @@ export class HomeComponent implements OnInit {
     this.enclosures$.subscribe(e => this.enclosures = e);
 
     this.ratings$ = combineLatest<Observable<IRating[]>, Observable<string>>(this.store.select(s => {
-      return s.ratings.items;
+      return s.ratings.ratings.items;
     }), this.filter$).pipe(
       map(i => i[0].filter(r =>
         r.parent.startsWith(i[1])

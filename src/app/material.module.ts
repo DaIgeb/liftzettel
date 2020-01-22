@@ -14,6 +14,8 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTableModule } from '@angular/material/table';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [],
@@ -31,6 +33,8 @@ import { MatTableModule } from '@angular/material/table';
     MatCardModule,
     MatExpansionModule,
     MatTableModule,
+    MatSliderModule,
+    MatSlideToggleModule,
     CommonModule,
   ],
   exports: [
@@ -42,10 +46,12 @@ import { MatTableModule } from '@angular/material/table';
     MatInputModule,
     MatIconModule,
     MatListModule,
-    MatCardModule,    
+    MatCardModule,
     MatBadgeModule,
     MatExpansionModule,
     MatTableModule,
+    MatSliderModule,
+    MatSlideToggleModule,
     ReactiveFormsModule
   ]
 })

@@ -38,7 +38,7 @@ export class RatingListComponent implements OnInit {
         decodeURIComponent(params.get('id')))
     );
 
-    this.arrangements$ = combineLatest(this.id$, this.store.select(s => s.arrangements.items), this.store.select(s => s.ratings.items)).pipe(
+    this.arrangements$ = combineLatest(this.id$, this.store.select(s => s.arrangements.items), this.store.select(s => s.ratings.ratings.items)).pipe(
       map(i => {
         const ratingsByParent = i[2].reduce((prev, cur) => {
           prev[cur.parent] = [

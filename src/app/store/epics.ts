@@ -5,7 +5,7 @@ import { CountryEpics } from '../country/epics';
 import { CityEpics } from '../city/epics';
 import { StateEpics } from '../state/epics';
 import { StreetEpics } from '../street/epics';
-import { RatingEpics } from '../rating/epics';
+import { Epics as RatingEpics } from "../rating/epics";
 import { ArrangementEpics } from '../arrangement/epics';
 import { EnclosureEpics } from '../enclosure/epics';
 
@@ -21,7 +21,7 @@ export class RootEpics {
     private ratingEpics: RatingEpics,
     private arrangementEpics: ArrangementEpics,
     private enclosureEpics: EnclosureEpics
-    ) {}
+  ) { }
 
   createEpics() {
     return combineEpics(

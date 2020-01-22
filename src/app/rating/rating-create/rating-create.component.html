@@ -1,1 +1,20 @@
 <p>rating-create works!</p>
+
+<div *ngFor="let questionaire of questionaires$ | async" class="questionaire">
+  {{questionaire.name}}
+  <div *ngFor="let question of questionaire.questions" class="question">
+    <h2>{{question.title}}</h2>
+    <div>
+      {{question.question}}
+    </div>
+    <ng-template [ngIf]="question.type === 'rating'">
+      <mat-slider [max]="question.max" [min]="question.min" [thumbLabel]="true">
+      </mat-slider>
+    </ng-template>
+    <ng-template [ngIf]="question.type === 'yesno'">
+      <mat-slide-toggle>
+        Slide me!
+      </mat-slide-toggle>
+    </ng-template>
+  </div>
+</div>
