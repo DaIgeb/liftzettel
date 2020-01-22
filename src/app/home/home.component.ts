@@ -10,6 +10,7 @@ import { AppState } from '../store/model';
 import { IRating } from '../rating/model';
 import { EnclosureAPIActions } from '../enclosure/actions';
 import { IEnclosure } from '../enclosure/model';
+import { UPDATE_LOCATION } from '@angular-redux/router';
 
 interface IForm {
   country: string;
@@ -108,8 +109,10 @@ export class HomeComponent implements OnInit {
     const filter = this.getFilter(this.formGroup.value);
     const enclosure = this.enclosures.find(i => i.code = filter);
     if (enclosure) {
-      console.warn(enclosure);
-
+      this.store.dispatch({
+        type: UPDATE_LOCATION,
+        payload: 'arrangement/' + enclosure.code
+      })
     } else {
       this.enclosureActions.create([{
         parent: filter,

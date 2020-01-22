@@ -5,9 +5,10 @@
   <mat-card-content>
     <form [formGroup]="formGroup">
       <mat-form-field>
-        <input matInput placeholder="Name">
+        <input matInput placeholder="Name"  formControlName="name">
       </mat-form-field>
 
+      <a mat-raised-button type="button" (click)="createArrangement()">Create Arrangement </a>
     </form>
   </mat-card-content>
 </mat-card>

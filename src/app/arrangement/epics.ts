@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Epic } from 'redux-observable-es6-compat';
+import { Epic, combineEpics } from 'redux-observable-es6-compat';
 
 import { of } from 'rxjs';
 import { catchError, filter, map, startWith, switchMap } from 'rxjs/operators';
@@ -8,15 +8,16 @@ import { AppState } from '../store/model';
 import { IArrangement, IArrangementError } from './model';
 import { ArrangementAPIAction, ArrangementAPIActions } from './actions';
 import { ArrangementService } from './arrangement.service';
+import { FluxStandardAction } from 'flux-standard-action';
 
 const notAlreadyFetched = (
   state: AppState,
 ): boolean =>
   (
-    state.streets &&
-    !state.streets.fetched &&
-    !state.streets.loading &&
-    state.streets.items.length === 0
+    state.arrangements &&
+    !state.arrangements.fetched &&
+    !state.arrangements.loading &&
+    state.arrangements.items.length === 0
   );
 
 
@@ -30,7 +31,10 @@ export class ArrangementEpics {
   ) { }
 
   createEpic() {
-    return this.createLoadEpic();
+    return combineEpics(
+      this.createLoadEpic(),
+      this.createCreateEpic()
+    );
   }
 
   private createLoadEpic(): Epic<
@@ -53,4 +57,26 @@ export class ArrangementEpics {
             startWith(this.actions.loadStarted()))
         ));
   }
+
+
+  private createCreateEpic(): Epic<
+    ArrangementAPIAction<IArrangement[] | IArrangementError> | FluxStandardAction<string, string, {}>,
+    ArrangementAPIAction<IArrangement[] | IArrangementError> | FluxStandardAction<string, string, {}>,
+    AppState
+  > {
+    return (action$, state$) =>
+      action$.pipe(
+        filter((a) => a.type === ArrangementAPIActions.CREATE),
+        switchMap((a) =>
+          this.service.create(a.payload as IArrangement[]).pipe(
+            map(data => this.actions.createSucceeded(data)),
+            catchError(res => of(
+              this.actions.createFailed({
+                status: '' + res.status,
+              }),
+            )),
+            startWith(this.actions.createStarted()))
+        ));
+  }
+
 }

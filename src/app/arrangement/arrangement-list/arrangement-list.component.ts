@@ -49,4 +49,19 @@ export class ArrangementListComponent implements OnInit {
   showInfo(code: string) {
     alert(code);
   }
+
+  createReview() {
+    /*const filter = this.getFilter(this.formGroup.value);
+    const enclosure = this.enclosures.find(i => i.code = filter);
+    if (enclosure) {
+      console.warn(enclosure);
+
+    } else {
+      this.enclosureActions.create([{
+        parent: filter,
+        name: 'Foo',
+        code: filter + ':$:1'
+      }]);
+    }*/
+  }
 }
