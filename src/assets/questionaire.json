@@ -3,9 +3,24 @@
     "name": "Arrangment-Questions",
     "questions": [
       {
+        "title": "from",
+        "question": "Start of contract",
+        "type": "date",
+        "required": true,
+        "allowComments": false
+      },
+      {
+        "title": "until",
+        "question": "End of contract",
+        "type": "date",        
+        "required": false,
+        "allowComments": false
+      },
+      {
         "title": "Noise-Level",
         "question": "How is the noise level in the arrangement?",
-        "type": "rating",
+        "type": "rating",        
+        "required": true,
         "min": 1,
         "max": 10,
         "allowComments": true
@@ -14,12 +29,14 @@
         "title": "Noise-Level",
         "question": "How is the noise level in the arrangement?",
         "type": "yesno",
+        "required": true,
         "allowComments": false
       },
       {
         "title": "Noise-Level2",
         "question": "How is the noise level in the arrangement?2",
         "type": "yesno",
+        "required": true,
         "allowComments": true
       }
     ]

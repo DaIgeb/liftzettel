@@ -16,6 +16,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTableModule } from '@angular/material/table';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [],
@@ -35,6 +37,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatTableModule,
     MatSliderModule,
     MatSlideToggleModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     CommonModule,
   ],
   exports: [
@@ -52,6 +56,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatTableModule,
     MatSliderModule,
     MatSlideToggleModule,
+    MatDatepickerModule,
     ReactiveFormsModule
   ]
 })
