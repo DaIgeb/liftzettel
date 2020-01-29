@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RatingListComponent } from './rating-list/rating-list.component';
 import { MaterialModule } from '../material.module';
 import { RatingCreateComponent } from './rating-create/rating-create.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { SharedModule } from '../shared/shared.module';
 
 
 
@@ -10,7 +12,10 @@ import { RatingCreateComponent } from './rating-create/rating-create.component';
   declarations: [RatingListComponent, RatingCreateComponent],
   imports: [
     MaterialModule,
-    CommonModule
+    ReactiveFormsModule,
+    FormsModule,
+    CommonModule,
+    SharedModule
   ],
   exports: [
     // ListComponent

@@ -1,20 +1,27 @@
 [
-{
-  "name": "Arrangment-Questions",
-  "questions": [
-    {
-      "title": "Noise-Level",
-      "question": "How is the noise level in the arrangement?",
-      "type": "rating",
-      "min": 1,
-      "max": 10
-    },
-    {
-      "title": "Noise-Level",
-      "question": "How is the noise level in the arrangement?",
-      "type": "yesno"
-    }
-  ]
-}
-
+  {
+    "name": "Arrangment-Questions",
+    "questions": [
+      {
+        "title": "Noise-Level",
+        "question": "How is the noise level in the arrangement?",
+        "type": "rating",
+        "min": 1,
+        "max": 10,
+        "allowComments": true
+      },
+      {
+        "title": "Noise-Level",
+        "question": "How is the noise level in the arrangement?",
+        "type": "yesno",
+        "allowComments": false
+      },
+      {
+        "title": "Noise-Level2",
+        "question": "How is the noise level in the arrangement?2",
+        "type": "yesno",
+        "allowComments": true
+      }
+    ]
+  }
 ]

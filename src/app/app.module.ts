@@ -52,7 +52,9 @@ import { NotFoundComponent } from './not-found/not-found.component';
     MaterialModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  exports: [
+  ]
 })
 export class AppModule {
  

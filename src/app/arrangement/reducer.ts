@@ -33,6 +33,14 @@ export function arrangementReducer(
         loading: false,
         error: action.error,
       };
+      case ArrangementAPIActions.CREATE_SUCCEEDED:
+        return {
+          ...state,
+          items: [],
+          fetched: false,
+          loading: false,
+          error: undefined
+        };
   }
 
   return state;

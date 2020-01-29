@@ -28,9 +28,9 @@ export class RatingCreateComponent implements OnInit {
     private arrangementActions: ArrangementAPIActions) { }
 
   ngOnInit() {
-    this.store.dispatch(this.ratingActions.load('CH'))
-    this.store.dispatch(this.questionaireActions.load())
-    this.store.dispatch(this.arrangementActions.load())
+    this.ratingActions.load('CH');
+    this.questionaireActions.load();
+    this.arrangementActions.load();
     this.id$ = this.route.paramMap.pipe(
       map((params: ParamMap) =>
         decodeURIComponent(params.get('id')))
@@ -38,26 +38,13 @@ export class RatingCreateComponent implements OnInit {
 
     this.questionaires$ = this.store.select(s => s.ratings.questionaires.items);
 
-    this.arrangements$ = combineLatest(this.id$, this.store.select(s => s.arrangements.items), this.store.select(s => s.ratings.ratings.items)).pipe(
-      map(i => {
-        const ratingsByParent = i[2].reduce((prev, cur) => {
-          prev[cur.parent] = [
-            ...(prev[cur.parent] || []),
-            cur
-          ]
-          return prev;
-        }, {} as {[index: string]: IRating[]});
+    this.arrangements$ = combineLatest(this.id$, this.store.select(s => s.arrangements.items)).pipe(
+      map(i => i[1].filter(r => r.code === i[0]))
+    );
+  }
 
-        return i[1].filter(r => r.parent.startsWith(i[0])).map(a => {
-          const ratings = (ratingsByParent[a.code] || []);
-          return ({
-            ...a,
-            rating: ratings.reduce((prev, cur) => prev + cur.rating, 0) / (ratings.length || 1),
-            ratings: ratings
-          });
-        });
-      }));
-
+  createRating(form: any) {
+    console.warn(form);
   }
 
 }

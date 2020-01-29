@@ -1,20 +1,30 @@
-<p>rating-create works!</p>
+<mat-card>
+  <mat-card-content>
+    <pre>
+{{arrangements$ | async | json}}
+</pre>
+    <form #myform>
+      <div *ngFor="let questionaire of questionaires$ | async" class="questionaire">
+        {{questionaire.name}}
+        <div *ngFor="let question of questionaire.questions" class="question">
+          <h2>{{question.title}}</h2>
+          <div>
+            {{question.question}}
+          </div>
+          <ng-template [ngIf]="question.type === 'rating'">
+            <mat-slider [max]="question.max" [min]="question.min" [thumbLabel]="true">
+            </mat-slider>
+          </ng-template>
+          <ng-template [ngIf]="question.type === 'yesno'">
+            <mat-slide-toggle>
+              Slide me!
+            </mat-slide-toggle>
+          </ng-template>
+          <app-comment *ngIf="question.allowComments"></app-comment>
+        </div>
+      </div>
+    </form>
 
-<div *ngFor="let questionaire of questionaires$ | async" class="questionaire">
-  {{questionaire.name}}
-  <div *ngFor="let question of questionaire.questions" class="question">
-    <h2>{{question.title}}</h2>
-    <div>
-      {{question.question}}
-    </div>
-    <ng-template [ngIf]="question.type === 'rating'">
-      <mat-slider [max]="question.max" [min]="question.min" [thumbLabel]="true">
-      </mat-slider>
-    </ng-template>
-    <ng-template [ngIf]="question.type === 'yesno'">
-      <mat-slide-toggle>
-        Slide me!
-      </mat-slide-toggle>
-    </ng-template>
-  </div>
-</div>
+    <a mat-raised-button type="button" (click)="createRating(myform)">Submit Questionaire</a>
+  </mat-card-content>
+</mat-card>

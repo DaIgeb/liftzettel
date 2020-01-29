@@ -9,6 +9,7 @@ import { IArrangement, IArrangementError } from './model';
 import { ArrangementAPIAction, ArrangementAPIActions } from './actions';
 import { ArrangementService } from './arrangement.service';
 import { FluxStandardAction } from 'flux-standard-action';
+import { UPDATE_LOCATION } from '@angular-redux/router';
 
 const notAlreadyFetched = (
   state: AppState,
@@ -33,7 +34,8 @@ export class ArrangementEpics {
   createEpic() {
     return combineEpics(
       this.createLoadEpic(),
-      this.createCreateEpic()
+      this.createCreateEpic(),
+      this.redirectToCreateRatingEpic()
     );
   }
 
@@ -77,6 +79,23 @@ export class ArrangementEpics {
             )),
             startWith(this.actions.createStarted()))
         ));
+  }
+
+  private redirectToCreateRatingEpic(): Epic<
+    ArrangementAPIAction<IArrangement[] | IArrangementError> | FluxStandardAction<string, string, {}>,
+    ArrangementAPIAction<IArrangement[] | IArrangementError> | FluxStandardAction<string, string, {}>,
+    AppState
+  > {
+    return (action$, state$) =>
+      action$.pipe(
+        filter((a) => a.type === ArrangementAPIActions.CREATE_SUCCEEDED),
+        map((a) =>
+          ({
+            type: UPDATE_LOCATION,
+            meta: {},
+            payload: 'rating/' + a.payload[0].code + '/new',
+          }))
+      );
   }
 
 }

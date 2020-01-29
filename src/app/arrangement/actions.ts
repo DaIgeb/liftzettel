@@ -71,10 +71,10 @@ export class ArrangementAPIActions {
 
   createSucceeded = (
     payload: IArrangement[],
-  ): FluxStandardAction<string, string, {}> => ({
-    type: UPDATE_LOCATION,
+  ): ArrangementAPIAction => ({
+    type: ArrangementAPIActions.CREATE_SUCCEEDED,
     meta: { },
-    payload: 'rating/' + payload[0].code + '/new',
+    payload: payload,
   });
 
   createFailed = (

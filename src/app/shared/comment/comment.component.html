@@ -1,0 +1,14 @@
+<div>
+  <ng-template [ngIf]="commentShown">
+    <mat-form-field>
+      <textarea matInput placeholder="Comment" [(ngModel)]="comment" cdkTextareaAutosize
+        #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
+      <button mat-button *ngIf="comment" matSuffix mat-icon-button aria-label="Clear" (click)="hideComment()" tabindex="-1">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </ng-template>
+  <ng-template [ngIf]="!commentShown">
+    <button mat-flat-button (click)="showComment()">Add comment</button>
+  </ng-template>
+</div>
