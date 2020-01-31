@@ -4,11 +4,12 @@ import { AppState } from 'src/app/store/model';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { RatingAPIActions } from '../actions';
 import { ArrangementAPIActions } from 'src/app/arrangement/actions';
-import { map } from 'rxjs/operators';
+import { map, take, first, filter, startWith } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
-import { IRating, IQuestionaire } from '../model';
+import { IRating, IQuestionaire, TQuestion } from '../model';
 import { IArrangement } from 'src/app/arrangement/model';
 import { QuestionaireAPIActions } from '../questionaire.actions';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-rating-create',
@@ -19,6 +20,7 @@ export class RatingCreateComponent implements OnInit {
   id$: Observable<string>;
   arrangements$: Observable<IArrangement[]>;
   questionaires$: Observable<IQuestionaire[]>;
+  questions$: Observable<TQuestion[]>;
 
   constructor(
     private store: NgRedux<AppState>,
@@ -37,6 +39,11 @@ export class RatingCreateComponent implements OnInit {
     );
 
     this.questionaires$ = this.store.select(s => s.ratings.questionaires.items);
+    this.questions$ = this.questionaires$.pipe(
+      filter(q => q.length > 0),
+      map(q => q[0].questions),
+      startWith([])
+    );
 
     this.arrangements$ = combineLatest(this.id$, this.store.select(s => s.arrangements.items)).pipe(
       map(i => i[1].filter(r => r.code === i[0]))

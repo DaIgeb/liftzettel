@@ -16,8 +16,12 @@ interface IRatingQuestion extends IQuestionBase {
 }
 
 interface IQuestionBase {
+  key?: string;
+  value?: string;
   title: string;
   question: string;
+  required: boolean;
+  allowComments: boolean;
 }
 
 export type TQuestion = IRatingQuestion | IYesNoQuestion
