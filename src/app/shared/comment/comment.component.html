@@ -1,9 +1,11 @@
 <div>
   <ng-template [ngIf]="commentShown">
     <mat-form-field>
-      <textarea matInput placeholder="Comment" [(ngModel)]="comment" cdkTextareaAutosize
-        #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
-      <button mat-button *ngIf="comment" matSuffix mat-icon-button aria-label="Clear" (click)="hideComment()" tabindex="-1">
+      <textarea matInput placeholder="Comment" cdkTextareaAutosize
+        #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
+        [formControl]="commentControl"
+        ></textarea>
+      <button mat-button *ngIf="commentControl.value" matSuffix mat-icon-button aria-label="Clear" (click)="hideComment()" tabindex="-1">
         <mat-icon>close</mat-icon>
       </button>
     </mat-form-field>

@@ -13,8 +13,11 @@ export class RatingQuestionsComponent implements OnInit, OnChanges {
       let group: any = {};
 
       (changes.questions.currentValue || []).forEach(question => {
-        group[question.key || question.title] = question.required ? new FormControl(question.value || '', Validators.required)
-          : new FormControl(question.value || '');
+        group[question.key || question.title] = new FormGroup({
+          question: question.required ? new FormControl(question.value || '', Validators.required)
+            : new FormControl(question.value || ''),
+          comment: new FormControl()
+        });
       });
 
       this.formGroup = new FormGroup(group);
@@ -26,7 +29,7 @@ export class RatingQuestionsComponent implements OnInit, OnChanges {
 
   constructor() { }
 
-  ngOnInit() {    
+  ngOnInit() {
   }
 
   createRating() {

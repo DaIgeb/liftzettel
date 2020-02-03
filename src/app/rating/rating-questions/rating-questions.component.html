@@ -4,25 +4,28 @@
     <div>
       {{question.question}}
     </div>
-    <ng-template [ngIf]="question.type === 'date'">
-      <mat-form-field>
-        <input matInput [matDatepicker]="picker" placeholder="Choose a date" [required]="question.required"
-          [formControlName]="question.key || question.title">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
-    </ng-template>
-    <ng-template [ngIf]="question.type === 'rating'">
-      <mat-slider [max]="question.max" [min]="question.min" [thumbLabel]="true"
-        [formControlName]="question.key || question.title">
-      </mat-slider>
-    </ng-template>
-    <ng-template [ngIf]="question.type === 'yesno'">
-      <mat-slide-toggle [formControlName]="question.key || question.title">
-        Slide me!
-      </mat-slide-toggle>
-    </ng-template>
-    <app-comment *ngIf="question.allowComments"></app-comment>
+    <div [formGroupName]="question.key || question.title">
+      <ng-template [ngIf]="question.type === 'date'">
+        <mat-form-field>
+          <input matInput [matDatepicker]="picker" placeholder="Choose a date" [required]="question.required"
+            formControlName="question">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </ng-template>
+      <ng-template [ngIf]="question.type === 'rating'">
+        <mat-slider [max]="question.max" [min]="question.min" [thumbLabel]="true"
+          formControlName="question">
+        </mat-slider>
+      </ng-template>
+      <ng-template [ngIf]="question.type === 'yesno'">
+        <mat-slide-toggle formControlName="question">
+          Slide me!
+        </mat-slide-toggle>
+      </ng-template>
+      <app-comment *ngIf="question.allowComments" formControlName="comment">
+        </app-comment>
+    </div>
   </div>
 
   <a mat-raised-button type="button" (click)="createRating()">Submit Questionaire</a>
