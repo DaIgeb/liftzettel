@@ -13,12 +13,14 @@ const routes: Routes = [
   { path: 'rating', component: RatingListComponent },
   { path: 'rating/:id', component: RatingListComponent },
   { path: 'rating/:id/new', component: RatingCreateComponent },
-  
+
   { path: 'arrangement', component: ArrangementListComponent },
   { path: 'arrangement/:id', component: ArrangementListComponent },
-  
+
   { path: 'enclosure', component: EnclosureListComponent },
   { path: 'enclosure/:id', component: EnclosureListComponent },
+
+  { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
 
   { path: '', component: HomeComponent },
   { path: '**', component: NotFoundComponent },

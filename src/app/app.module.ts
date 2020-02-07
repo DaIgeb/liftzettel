@@ -22,6 +22,7 @@ import { RatingModule } from './rating/rating.module';
 import { ArrangementModule } from './arrangement/arrangement.module';
 import { EnclosureModule } from './enclosure/enclosure.module';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
 
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,

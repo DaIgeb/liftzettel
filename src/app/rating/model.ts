@@ -27,6 +27,7 @@ interface IQuestionBase {
 export type TQuestion = IRatingQuestion | IYesNoQuestion
 
 export interface IQuestionaire {
+  id: string;
   name: string;
   questions: TQuestion[];
 }

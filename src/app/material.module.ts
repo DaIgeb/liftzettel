@@ -22,7 +22,6 @@ import { MatNativeDateModule } from '@angular/material/core';
 @NgModule({
   declarations: [],
   imports: [
-    BrowserAnimationsModule,
     MatFormFieldModule,
     MatAutocompleteModule,
     MatToolbarModule,

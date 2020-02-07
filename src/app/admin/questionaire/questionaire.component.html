@@ -1,0 +1,13 @@
+<mat-card *ngIf="questionnaire !== undefined">
+  <mat-card-header>
+    <mat-card-title>{{questionnaire.name}}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="formGroup">
+      <mat-form-field>
+        <input matInput placeholder="Name" formControlName="name">
+      </mat-form-field>
+      <app-question-list formControlName="questions"></app-question-list>
+    </form>
+  </mat-card-content>
+</mat-card>

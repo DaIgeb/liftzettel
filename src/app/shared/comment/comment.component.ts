@@ -1,7 +1,7 @@
 import { Component, OnInit, NgZone, ViewChild } from '@angular/core';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { take } from 'rxjs/operators';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl, FormGroup } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-comment',
@@ -15,11 +15,8 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl, FormGroup } from 
 })
 export class CommentComponent implements OnInit, ControlValueAccessor {
   commentControl = new FormControl();
-  formGroup = new FormGroup({
-    comment: this.commentControl
-  });
+  
   private _onChange: any = () => {};
-  private _onTouch: any;
 
   writeValue(obj: any): void {
     this.commentControl.patchValue(obj);
@@ -30,7 +27,6 @@ export class CommentComponent implements OnInit, ControlValueAccessor {
   }
 
   registerOnTouched(fn: any): void {
-    this._onTouch = fn;
   }
 
   commentShown: boolean = false;
