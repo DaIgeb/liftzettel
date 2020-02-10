@@ -1,2 +1,21 @@
-<p>question works!</p>
-<pre>{{question | json}}</pre>
+<div [formGroup]="formGroup">
+  <mat-form-field>
+    <input matInput formControlName="title">
+  </mat-form-field>
+
+  <label id="example-radio-group-label">Pick the question type</label>
+  <mat-radio-group aria-labelledby="example-radio-group-label" formControlName="type">
+    <mat-radio-button *ngFor="let type of types" [value]="type">
+      {{type}}
+    </mat-radio-button>
+  </mat-radio-group>
+
+  <div [ngSwitch]="typeControl.value">
+    <input *ngSwitchCase="'yesno'" [formControlName]="key" [id]="key">
+
+    <select [id]="key" *ngSwitchCase="'dropdown'" [formControlName]="key">
+      <option *ngFor="let opt of question.options" [value]="opt.key">{{opt.value}}</option>
+    </select>
+
+  </div>
+</div>

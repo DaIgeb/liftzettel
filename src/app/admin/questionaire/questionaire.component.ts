@@ -16,7 +16,7 @@ import { IQuestionaire } from 'src/app/rating/model';
 export class QuestionaireComponent implements OnInit {
 
   name = new FormControl();
-  questions = new FormArray([]);
+  questions = new FormControl();
   formGroup = new FormGroup({
     name: this.name,
     questions: this.questions
@@ -49,13 +49,9 @@ export class QuestionaireComponent implements OnInit {
   }
 
   private loadQuestionnaire(questionnaire: IQuestionaire) {
-    this.questions.clear();
-
     if (questionnaire) {
       this.name.patchValue(questionnaire.name);
-      for (let question of questionnaire.questions) {
-        this.questions.push(new FormControl(question))
-      }
+      this.questions.patchValue(questionnaire.questions);
     }
   }
 

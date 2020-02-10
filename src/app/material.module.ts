@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatRadioModule} from '@angular/material/radio';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -38,6 +38,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatSlideToggleModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatRadioModule,
     CommonModule,
   ],
   exports: [
@@ -51,6 +52,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatListModule,
     MatCardModule,
     MatBadgeModule,
+    MatRadioModule,
     MatExpansionModule,
     MatTableModule,
     MatSliderModule,

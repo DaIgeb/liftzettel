@@ -13,41 +13,34 @@ import { isArray } from 'util';
   }]
 })
 export class QuestionListComponent implements OnInit, ControlValueAccessor {
-  registerOnChange(fn: any): void {
-    this._onChange = fn;
-    //throw new Error("Method not implemented.2");
-  }
-  setDisabledState?(isDisabled: boolean): void {
-    throw new Error("Method not implemented.");
-  }
   questionsControl = new FormArray([]);
   formGroup = new FormGroup({
-    comment: this.questionsControl
+    questions: this.questionsControl
   });
 
-  private _onChange: any;
-  
+  private _onChange = (obj: any) => { };
+
   constructor(
-    
+
   ) { }
 
   ngOnInit() {
-    // this.questionsControl.valueChanges.subscribe(v => this._onChange(v));    
+    this.questionsControl.valueChanges.subscribe(v => this._onChange(v));
   }
 
+  registerOnChange(fn: any): void {
+    this._onChange = fn;
+  }
 
   writeValue(obj: any): void {
     this.questionsControl.clear();
     if (isArray(obj)) {
       for (let question of obj) {
-        this.questionsControl.push(new FormControl(question));
+        this.questionsControl.push(new FormGroup({ question: new FormControl(question) }));
       }
     }
   }
 
-  
   registerOnTouched(fn: any): void {
   }
-
-  
 }
