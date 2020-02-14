@@ -105,7 +105,7 @@ export class HomeComponent implements OnInit {
 
   createReview() {
     const filter = this.getFilter(this.formGroup.value);
-    const enclosure = this.enclosures.find(i => i.code = filter);
+    const enclosure = this.enclosures.find(i => i.code === filter);
     if (enclosure) {
       this.router.navigate(['arrangement/' + enclosure.code]);
     } else {
