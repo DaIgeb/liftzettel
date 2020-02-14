@@ -8,12 +8,8 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { HomeComponent } from './home/home.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
-import { StoreModule } from './store/store.module';
-import { NgReduxModule } from '@angular-redux/store';
-import { NgReduxRouterModule } from '@angular-redux/router';
 import { HttpClientModule } from '@angular/common/http';
 import { CountryModule } from './country/country.module';
-import { NgReduxFormModule } from '@angular-redux/form';
 import { CityModule } from './city/city.module';
 import { StateModule } from './state/state.module';
 import { MaterialModule } from './material.module';
@@ -23,6 +19,11 @@ import { ArrangementModule } from './arrangement/arrangement.module';
 import { EnclosureModule } from './enclosure/enclosure.module';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { rootReducer, metaReducers } from './reducers'
+import { environment } from '../environments/environment';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
   declarations: [
@@ -38,20 +39,25 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
-    NgReduxFormModule,
     LayoutModule,
     HttpClientModule,
-    NgReduxModule,
-    NgReduxRouterModule.forRoot(),
     CountryModule,
     CityModule,
     StateModule,
     StreetModule,
     RatingModule,
-    StoreModule,
     ArrangementModule,
     EnclosureModule,
-    MaterialModule
+    MaterialModule,
+    StoreModule.forRoot(rootReducer, {
+      metaReducers,
+      runtimeChecks: {
+        strictStateImmutability: true,
+        strictActionImmutability: true
+      }
+    }),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
+    EffectsModule.forRoot([])
   ],
   providers: [],
   bootstrap: [AppComponent],
@@ -59,5 +65,5 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
   ]
 })
 export class AppModule {
- 
+
 }

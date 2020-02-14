@@ -2,11 +2,10 @@ import { Component, OnInit, Input } from '@angular/core';
 import { IStreet, isStreet } from '../model';
 import { Observable, combineLatest } from 'rxjs';
 import { FormControl, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
-import { ICity } from 'src/app/city/model';
-import { NgRedux } from '@angular-redux/store';
+import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/store/model';
-import { StreetAPIActions } from '../actions';
-import { filter, first, map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
+import * as fromActions from '../actions';
 
 @Component({
   selector: 'app-street-input',
@@ -20,7 +19,6 @@ import { filter, first, map, tap } from 'rxjs/operators';
 })
 export class StreetInputComponent implements OnInit, ControlValueAccessor {
   private onChanged: any = () => { }
-  private onTouched: any = () => { }
 
   filteredStreets$: Observable<IStreet[]>;
   street = new FormControl('Bahnhofstrasse');
@@ -29,13 +27,12 @@ export class StreetInputComponent implements OnInit, ControlValueAccessor {
   city$: Observable<string>;
 
   constructor(
-    private store: NgRedux<AppState>,
-    private streetActions: StreetAPIActions
+    private store: Store<AppState>
 
   ) { }
 
   ngOnInit() {
-    this.store.dispatch(this.streetActions.load());
+    this.store.dispatch(fromActions.load());
     this.street.valueChanges.subscribe(v => this.onChanged(isStreet(v) ? v.code : undefined));
     
     const streets$ = this.store.select(s => s.streets.items);
@@ -69,7 +66,6 @@ export class StreetInputComponent implements OnInit, ControlValueAccessor {
     this.onChanged = fn
   }
   registerOnTouched(fn: any) {
-    this.onTouched = fn
   }
 
   displayStreet(street: IStreet) {

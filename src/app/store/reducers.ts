@@ -1,6 +1,4 @@
 import { combineReducers } from 'redux';
-import { composeReducers, defaultFormReducer } from '@angular-redux/form';
-import { routerReducer } from '@angular-redux/router';
 import { countryReducer } from '../country/reducer';
 import { cityReducer } from '../city/reducer';
 import { stateReducer } from '../state/reducer';
@@ -10,16 +8,13 @@ import { arrangementReducer } from '../arrangement/reducer';
 import { enclosureReducer } from '../enclosure/reducer';
 
 
-export const rootReducer = composeReducers(
-  defaultFormReducer(),
+export const rootReducer =
   combineReducers({
     countries: countryReducer,
     cities: cityReducer,
     states: stateReducer,
     streets: streetReducer,
-    router: routerReducer,
     ratings: ratingReducer,
     arrangements: arrangementReducer,
     enclosures: enclosureReducer
-  }),
-);
+  });

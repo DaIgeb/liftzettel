@@ -1,55 +1,12 @@
-import { dispatch } from '@angular-redux/store';
-import { Injectable } from '@angular/core';
-import { FluxStandardAction } from 'flux-standard-action';
+import { createAction, props } from '@ngrx/store';
 
-import { IRating, IRatingError, IQuestionaire, IQuestionaireError } from './model';
+import { IRating, IRatingError, IQuestionaire as IQuestionnaire, IQuestionaireError as IQuestionnaireError } from './model';
 
-// Flux-standard-action gives us stronger typing of our actions.
-export type Payload = IQuestionaire[] | IRatingError;
+export const LOAD = '[QUESTIONAIRE]: LOAD';
+export const LOAD_STARTED = '[QUESTIONAIRE]: LOAD_STARTED';
+export const LOAD_SUCCEEDED = '[QUESTIONAIRE]: LOAD_SUCCEEDED';
+export const LOAD_FAILED = '[QUESTIONAIRE]: LOAD_FAILED';
 
-export interface MetaData {
-}
-
-export type QuestionaireAPIAction<T extends Payload = IQuestionaire[]> = FluxStandardAction<
-  string,
-  T,
-  MetaData
->;
-
-@Injectable({
-  providedIn: 'root'
-})
-export class QuestionaireAPIActions {
-  static readonly LOAD = '[QUESTIONAIRE]: LOAD';
-  static readonly LOAD_STARTED = '[QUESTIONAIRE]: LOAD_STARTED';
-  static readonly LOAD_SUCCEEDED = '[QUESTIONAIRE]: LOAD_SUCCEEDED';
-  static readonly LOAD_FAILED = '[QUESTIONAIRE]: LOAD_FAILED';
-
-  @dispatch()
-  load = (): QuestionaireAPIAction => ({
-    type: QuestionaireAPIActions.LOAD,
-    meta: {},
-  });
-
-  loadStarted = (): QuestionaireAPIAction => ({
-    type: QuestionaireAPIActions.LOAD_STARTED,
-    meta: {},
-  });
-
-  loadSucceeded = (
-    payload: IQuestionaire[],
-  ): QuestionaireAPIAction<IQuestionaire[]> => ({
-    type: QuestionaireAPIActions.LOAD_SUCCEEDED,
-    meta: {},
-    payload,
-  });
-
-  loadFailed = (
-    error: IQuestionaireError
-  ): QuestionaireAPIAction<IQuestionaireError> => ({
-    type: QuestionaireAPIActions.LOAD_FAILED,
-    meta: {},
-    payload: error,
-    error: true,
-  });
-}
+export const loadQuestionnaires = createAction(LOAD);
+export const loadQuestionnairesFailed = createAction(LOAD_FAILED, props<{ payload: IQuestionnaireError, error: true }>());
+export const loadQuestionnairesSucceeded = createAction(LOAD_SUCCEEDED, props<{ payload: IQuestionnaire[] }>());

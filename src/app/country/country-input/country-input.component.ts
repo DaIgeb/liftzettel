@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { NgRedux } from '@angular-redux/store';
+import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/store/model';
-import { CountryAPIActions } from '../actions';
+import * as fromActions from '../actions';
 import { Observable, combineLatest } from 'rxjs';
 import { ICountry, isCountry } from '../model';
 import { FormControl, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -29,12 +29,11 @@ export class CountryInputComponent implements OnInit, ControlValueAccessor {
   filteredCountries$: Observable<ICountry[]>;
 
   constructor(
-    private store: NgRedux<AppState>,
-    private countryActions: CountryAPIActions
+    private store: Store<AppState>
   ) { }
 
   ngOnInit() {
-    this.store.dispatch(this.countryActions.load());
+    this.store.dispatch(fromActions.load());
 
     const countries$ = this.store.select(s => s.countries.items);
 

@@ -19,7 +19,7 @@ export class ArrangementService {
     return this.http.get<IArrangement[]>('./assets/arrangement.json').pipe(map(d => [...d, ...additionalArrangements]));
   }
 
-  create(data: IArrangement[]) {
+  create(data: IArrangement[]): Observable<IArrangement[]> {
     additionalArrangements.push(...data);
     
     return of(data);

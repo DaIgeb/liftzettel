@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Observable, combineLatest } from 'rxjs';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { map } from 'rxjs/operators';
-import { ArrangementAPIActions } from '../actions';
-import { NgRedux } from '@angular-redux/store';
+import * as fromArrangementActions from '../actions';
+import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/store/model';
 import { IArrangement } from '../model';
-import { EnclosureAPIActions } from 'src/app/enclosure/actions';
+import * as fromEnclosureActions from 'src/app/enclosure/actions';
 import { IEnclosure } from 'src/app/enclosure/model';
 
 @Component({
@@ -19,15 +19,13 @@ export class ArrangementListComponent implements OnInit {
   enclosure$: Observable<IEnclosure>;
 
   constructor(
-    private store: NgRedux<AppState>,
-    private route: ActivatedRoute,
-    private arrangementActions: ArrangementAPIActions,
-    private enclosureActions: EnclosureAPIActions
+    private store: Store<AppState>,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
-    this.store.dispatch(this.arrangementActions.load())
-    this.store.dispatch(this.enclosureActions.load())
+    this.store.dispatch(fromArrangementActions.loadArrangements())
+    this.store.dispatch(fromEnclosureActions.load());
     
     this.id$ = this.route.paramMap.pipe(
       map((params: ParamMap) =>

@@ -1,39 +1,35 @@
-import { Action } from 'redux';
+import { createReducer, on } from '@ngrx/store';
 
-import { ICityState, initialState } from './model';
-import { CityAPIAction, CityAPIActions } from './actions';
+import { initialState } from './model';
+import * as fromActions from './actions';
 
-export function cityReducer(
-  state: ICityState = initialState,
-  a: Action,
-): ICityState {
-  const action = a as CityAPIAction;
-  switch (action.type) {
-    case CityAPIActions.LOAD_STARTED:
-      return {
-        ...state,
-        items: [],
-        loading: true,
-        fetched: false,
-        error: undefined,
-      };
-    case CityAPIActions.LOAD_SUCCEEDED:
-      return {
-        ...state,
-        items: action.payload,
-        loading: false,
-        fetched: true,
-        error: undefined,
-      };
-    case CityAPIActions.LOAD_FAILED:
-      return {
-        ...state,
-        items: [],
-        fetched: false,
-        loading: false,
-        error: action.error,
-      };
-  }
-
-  return state;
-};
+export const cityReducer = createReducer(
+  initialState,
+  on(fromActions.load, (state, action) => (
+    {
+      ...state,
+      items: [],
+      loading: true,
+      fetched: false,
+      error: undefined,
+    }
+  )),
+  on(fromActions.loadSuccess, (state, action) => (
+    {
+      ...state,
+      items: action.payload,
+      loading: false,
+      fetched: true,
+      error: undefined,
+    }
+  )),
+  on(fromActions.loadFailed, (state, action) => (
+    {
+      ...state,
+      items: [],
+      fetched: false,
+      loading: false,
+      error: true
+    }
+  )),
+);

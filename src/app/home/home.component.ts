@@ -4,13 +4,13 @@ import { Observable, combineLatest } from 'rxjs';
 import { map, startWith, filter, tap, take, first } from 'rxjs/operators';
 
 import { IState } from '../state/model';
-import { RatingAPIActions } from '../rating/actions';
-import { NgRedux } from '@angular-redux/store';
+import * as fromRatingActions from '../rating/actions';
+import { Store } from '@ngrx/store';
 import { AppState } from '../store/model';
 import { IRating } from '../rating/model';
-import { EnclosureAPIActions } from '../enclosure/actions';
+import * as fromEnclosureActions from '../enclosure/actions';
 import { IEnclosure } from '../enclosure/model';
-import { UPDATE_LOCATION } from '@angular-redux/router';
+import { Router } from '@angular/router';
 
 interface IForm {
   country: string;
@@ -50,20 +50,18 @@ export class HomeComponent implements OnInit {
   enclosures: IEnclosure[];
 
   constructor(
-    private store: NgRedux<AppState>,
-    private ratingActions: RatingAPIActions,
-    private enclosureActions: EnclosureAPIActions,
+    private store: Store<AppState>,
+    private router: Router
   ) { }
 
   ngOnInit() {
     this.store.select(s => s.enclosures.fetched).subscribe(f => {
       if (!f) {
-        this.enclosureActions.load();
+        this.store.dispatch(fromEnclosureActions.load());
       } else {
         console.warn('Already loaded')
       }
     });
-    // this.enclosureActions.load();
 
     const countryValueChanges$ = this.country.valueChanges;
 
@@ -73,7 +71,7 @@ export class HomeComponent implements OnInit {
       .pipe(
         filter(c => c !== undefined)
       ).
-      subscribe(c => this.store.dispatch(this.ratingActions.load(c)));
+      subscribe(c => this.store.dispatch(fromRatingActions.loadRatings({ meta: { country: c } })));
 
 
     this.state$ = this.state.valueChanges.pipe(
@@ -109,16 +107,15 @@ export class HomeComponent implements OnInit {
     const filter = this.getFilter(this.formGroup.value);
     const enclosure = this.enclosures.find(i => i.code = filter);
     if (enclosure) {
-      this.store.dispatch({
-        type: UPDATE_LOCATION,
-        payload: 'arrangement/' + enclosure.code
-      })
+      this.router.navigate(['arrangement/' + enclosure.code]);
     } else {
-      this.enclosureActions.create([{
-        parent: filter,
-        name: 'Foo',
-        code: filter + ':$:1'
-      }]);
+      this.store.dispatch(fromEnclosureActions.create({
+        payload: [{
+          parent: filter,
+          name: 'Foo',
+          code: filter + ':$:1'
+        }]
+      }));
     }
   }
 

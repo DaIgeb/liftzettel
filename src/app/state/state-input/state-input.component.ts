@@ -2,9 +2,9 @@ import { Component, OnInit, Input } from '@angular/core';
 import { filter, first, map, tap } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 import { IState, isState } from '../model';
-import { NgRedux } from '@angular-redux/store';
+import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/store/model';
-import { StateAPIActions } from '../actions';
+import * as fromActions from '../actions';
 import { FormControl, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 @Component({
@@ -29,12 +29,11 @@ export class StateInputComponent implements OnInit, ControlValueAccessor {
   countryCode$: Observable<string>;
 
   constructor(
-    private store: NgRedux<AppState>,
-    private stateActions: StateAPIActions,
+    private store: Store<AppState>
   ) { }
 
   ngOnInit() {
-    this.store.dispatch(this.stateActions.load());
+    this.store.dispatch(fromActions.load());
 
     this.state.valueChanges.pipe(
       map((v: string | IState | undefined) => {

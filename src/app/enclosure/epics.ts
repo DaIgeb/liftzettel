@@ -1,80 +1,64 @@
 import { Injectable } from '@angular/core';
-import { Epic, combineEpics } from 'redux-observable-es6-compat';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Store, select } from '@ngrx/store';
 
 import { of } from 'rxjs';
-import { catchError, filter, map, startWith, switchMap } from 'rxjs/operators';
+import { catchError, filter, map, switchMap, concatMap, withLatestFrom } from 'rxjs/operators';
 
 import { AppState } from '../store/model';
-import { IEnclosure, IEnclosureError } from './model';
-import { EnclosureAPIAction, EnclosureAPIActions } from './actions';
+import { IEnclosureState } from './model';
+import * as fromActions from './actions';
 import { EnclosureService } from './enclosure.service';
-import { FluxStandardAction } from 'flux-standard-action';
 
 const notAlreadyFetched = (
-  state: AppState,
+  state: IEnclosureState,
 ): boolean =>
   (
-    state.enclosures && (
-    !state.enclosures.fetched ||
-    !state.enclosures.loading ||
-    state.enclosures.items.length === 0
+    state && (
+      !state.fetched ||
+      !state.loading ||
+      state.items.length === 0
     )
   );
 
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class EnclosureEpics {
   constructor(
     private service: EnclosureService,
-    private actions: EnclosureAPIActions,
+    private store: Store<AppState>,
+    private actions$: Actions,
   ) { }
 
-  createEpic() {
-    return combineEpics(
-      this.createLoadEpic(),
-      this.createSaveEpic());
-  }
+  loadStreets$ = createEffect(() => this.actions$.pipe(
+    ofType(fromActions.load),
+    concatMap(action => of(action).pipe(
+      withLatestFrom(this.store.pipe(select(s => s.enclosures)))
+    )),
+    filter(([_, state]) => notAlreadyFetched(state)),
+    switchMap(([, _]) =>
+      this.service.getAll().pipe(
+        map(data => fromActions.loadSuccess({ payload: data })),
+        catchError(res => of(
+          fromActions.loadFailed({ payload: {
+            status: '' + res.status,}
+          }),
+        )))
+    )));
 
-  private createLoadEpic(): Epic<
-    EnclosureAPIAction<IEnclosure[] | IEnclosureError>,
-    EnclosureAPIAction<IEnclosure[] | IEnclosureError>,
-    AppState
-  > {
-    return (action$, state$) =>
-      action$.pipe(
-        filter((a) => a.type === EnclosureAPIActions.LOAD),
-        filter(() => notAlreadyFetched(state$.value)),
-        switchMap(() =>
-          this.service.getAll().pipe(
-            map(data => this.actions.loadSucceeded(data)),
-            catchError(res => of(
-              this.actions.loadFailed({
-                status: '' + res.status,
-              }),
-            )),
-            startWith(this.actions.loadStarted()))
-        ));
-  }
-
-  private createSaveEpic(): Epic<
-    EnclosureAPIAction<IEnclosure[] | IEnclosureError> | FluxStandardAction<string, string, {}>,
-    EnclosureAPIAction<IEnclosure[] | IEnclosureError> | FluxStandardAction<string, string, {}>,
-    AppState
-  > {
-    return (action$, state$) =>
-      action$.pipe(
-        filter((a) => a.type === EnclosureAPIActions.SAVE),
-        switchMap((a) =>
-          this.service.create(a.payload as IEnclosure[]).pipe(
-            map(data => this.actions.createSucceeded(data)),
-            catchError(res => of(
-              this.actions.createFailed({
-                status: '' + res.status,
-              }),
-            )),
-            startWith(this.actions.createStarted()))
-        ));
-  }
+  saveEnclosure$ = createEffect(() => this.actions$.pipe(
+    ofType(fromActions.create),
+    switchMap((a: any) =>
+      this.service.create(a.payload).pipe(
+        map(data => fromActions.createSuccess({ payload: data })),
+        catchError(res => of(
+          fromActions.createFailed({
+            payload: {
+              status: '' + res.status,
+            }
+          })
+        ))
+      )
+    )
+  ));
 }

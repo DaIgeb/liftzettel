@@ -13,9 +13,5 @@
   <div [ngSwitch]="typeControl.value">
     <input *ngSwitchCase="'yesno'" [formControlName]="key" [id]="key">
 
-    <select [id]="key" *ngSwitchCase="'dropdown'" [formControlName]="key">
-      <option *ngFor="let opt of question.options" [value]="opt.key">{{opt.value}}</option>
-    </select>
-
   </div>
 </div>

@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { Observable, combineLatest } from 'rxjs';
-import { RatingAPIActions } from '../actions';
-import { NgRedux } from '@angular-redux/store';
+import * as fromRatingActions from '../actions';
+import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/store/model';
 import { IRating } from '../model';
 import { IArrangement } from 'src/app/arrangement/model';
-import { ArrangementAPIActions } from 'src/app/arrangement/actions';
+import * as fromArrangementActions from 'src/app/arrangement/actions';
 
 type TArrangement = IArrangement & {
   ratings: IRating[];
@@ -24,15 +24,13 @@ export class RatingListComponent implements OnInit {
   arrangements$: Observable<TArrangement[]>;
 
   constructor(
-    private store: NgRedux<AppState>,
-    private route: ActivatedRoute,
-    private ratingActions: RatingAPIActions,
-    private arrangementActions: ArrangementAPIActions
+    private store: Store<AppState>,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
-    this.store.dispatch(this.ratingActions.load('CH'))
-    this.store.dispatch(this.arrangementActions.load())
+    this.store.dispatch(fromRatingActions.loadRatings({ meta: { country: 'CH' } }))
+    this.store.dispatch(fromArrangementActions.loadArrangements())
     this.id$ = this.route.paramMap.pipe(
       map((params: ParamMap) =>
         decodeURIComponent(params.get('id')))
@@ -46,7 +44,7 @@ export class RatingListComponent implements OnInit {
             cur
           ]
           return prev;
-        }, {} as {[index: string]: IRating[]});
+        }, {} as { [index: string]: IRating[] });
 
         return i[1].filter(r => r.parent.startsWith(i[0])).map(a => {
           const ratings = (ratingsByParent[a.code] || []);

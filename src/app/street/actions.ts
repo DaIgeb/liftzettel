@@ -1,54 +1,11 @@
-import { dispatch } from '@angular-redux/store';
-import { Injectable } from '@angular/core';
-import { FluxStandardAction } from 'flux-standard-action';
+import { createAction, props } from '@ngrx/store';
 
 import { IStreet, IStreetError } from './model';
 
-export type Payload = IStreet[] | IStreetError;
+export const LOAD = '[STREETS]: LOAD';
+export const LOAD_SUCCEEDED = '[STREETS]: LOAD_SUCCEEDED';
+export const LOAD_FAILED = '[STREETS]: LOAD_FAILED';
 
-export interface MetaData {
-}
-
-export type StreetAPIAction<T extends Payload = IStreet[]> = FluxStandardAction<
-  string, 
-  T,
-  MetaData
->;
-
-@Injectable({
-  providedIn: 'root'
-})
-export class StreetAPIActions {
-  static readonly LOAD = '[STREETS]: LOAD';
-  static readonly LOAD_STARTED = '[STREETS]: LOAD_STARTED';
-  static readonly LOAD_SUCCEEDED = '[STREETS]: LOAD_SUCCEEDED';
-  static readonly LOAD_FAILED = '[STREETS]: LOAD_FAILED';
-
-  @dispatch()
-  load = (): StreetAPIAction => ({
-    type: StreetAPIActions.LOAD,
-    meta: { },
-  });
-
-  loadStarted = (): StreetAPIAction => ({
-    type: StreetAPIActions.LOAD_STARTED,
-    meta: { },
-  });
-
-  loadSucceeded = (
-    payload: IStreet[],
-  ): StreetAPIAction<IStreet[]> => ({
-    type: StreetAPIActions.LOAD_SUCCEEDED,
-    meta: { },
-    payload,
-  });
-
-  loadFailed = (
-    error: IStreetError,
-  ): StreetAPIAction<IStreetError> => ({
-    type: StreetAPIActions.LOAD_FAILED,
-    meta: { },
-    payload: error,
-    error: true,
-  });
-}
+export const load = createAction(LOAD);
+export const loadSuccess = createAction(LOAD_SUCCEEDED, props<{ payload: IStreet[] }>());
+export const loadFailed = createAction(LOAD_FAILED, props<{ payload: IStreetError }>());

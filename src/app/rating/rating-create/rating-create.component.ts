@@ -1,15 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { NgRedux } from '@angular-redux/store';
+import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/store/model';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { RatingAPIActions } from '../actions';
-import { ArrangementAPIActions } from 'src/app/arrangement/actions';
-import { map, take, first, filter, startWith } from 'rxjs/operators';
+import * as fromRatingAtions from '../actions';
+import * as fromArrangementAtions from 'src/app/arrangement/actions';
+import { map, filter, startWith } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
-import { IRating, IQuestionaire, TQuestion } from '../model';
+import { IQuestionaire, TQuestion } from '../model';
 import { IArrangement } from 'src/app/arrangement/model';
-import { QuestionaireAPIActions } from '../questionaire.actions';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import * as fromQuestionnaireActions from '../questionaire.actions';
 
 @Component({
   selector: 'app-rating-create',
@@ -23,16 +22,15 @@ export class RatingCreateComponent implements OnInit {
   questions$: Observable<TQuestion[]>;
 
   constructor(
-    private store: NgRedux<AppState>,
-    private route: ActivatedRoute,
-    private ratingActions: RatingAPIActions,
-    private questionaireActions: QuestionaireAPIActions,
-    private arrangementActions: ArrangementAPIActions) { }
+    private store: Store<AppState>,
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit() {
-    this.ratingActions.load('CH');
-    this.questionaireActions.load();
-    this.arrangementActions.load();
+    this.store.dispatch(fromRatingAtions.loadRatings({ meta: { country: 'CH' } }));
+    this.store.dispatch(fromQuestionnaireActions.loadQuestionnaires());
+    this.store.dispatch(fromArrangementAtions.loadArrangements());
+
     this.id$ = this.route.paramMap.pipe(
       map((params: ParamMap) =>
         decodeURIComponent(params.get('id')))

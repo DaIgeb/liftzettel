@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IQuestionaire } from 'src/app/rating/model';
-import { QuestionaireAPIActions } from 'src/app/rating/questionaire.actions';
-import { NgRedux } from '@angular-redux/store';
+import * as fromActions from 'src/app/rating/questionaire.actions';
+import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/store/model';
 
 @Component({
@@ -15,12 +15,11 @@ export class QuestionnaireListComponent implements OnInit {
   questionnaires$: Observable<IQuestionaire[]>;
 
   constructor(
-    private store: NgRedux<AppState>,
-    private api: QuestionaireAPIActions
+    private store: Store<AppState>
   ) { }
 
   ngOnInit() {
-    this.api.load();
+    this.store.dispatch(fromActions.loadQuestionnaires());
 
     this.questionnaires$ = this.store.select(s => s.ratings.questionaires.items);
   }

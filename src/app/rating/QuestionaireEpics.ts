@@ -1,40 +1,47 @@
 import { Injectable } from '@angular/core';
-import { Epic } from 'redux-observable-es6-compat';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Store, select } from '@ngrx/store';
+
 import { of } from 'rxjs';
-import { catchError, filter, map, startWith, switchMap } from 'rxjs/operators';
+import { catchError, filter, map, startWith, switchMap, concatMap, withLatestFrom } from 'rxjs/operators';
 import { AppState } from '../store/model';
-import { IQuestionaire, IQuestionaireError } from './model';
-import { QuestionaireAPIAction, QuestionaireAPIActions } from './questionaire.actions';
+import { IQuestionaire, IQuestionaireError, IRatingState } from './model';
+import * as fromActions from './questionaire.actions';
 import { QuestionaireService } from './questionaire.service';
 
 const questionairesNorAlreadyFetched = (
-  state: AppState,
+  state: IRatingState,
 ): boolean =>
   (
-    state.ratings &&
-    !state.ratings.questionaires.fetched &&
-    !state.ratings.questionaires.loading
+    state &&
+    !state.questionaires.fetched &&
+    !state.questionaires.loading
   );
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class QuestionaireEpics {
-  constructor(private service: QuestionaireService, private actions: QuestionaireAPIActions) { }
-  createEpic() {
-    return this.createLoadEpic();
-  }
+  constructor(
+    private service: QuestionaireService,
+    private store: Store<AppState>,
+    private actions$: Actions,
+  ) { }
 
-  private createLoadEpic(): Epic<QuestionaireAPIAction<IQuestionaire[] | IQuestionaireError>, QuestionaireAPIAction<IQuestionaire[] | IQuestionaireError>, AppState> {
-    return (action$, state$) => action$.pipe(
-      filter((a) => a.type === QuestionaireAPIActions.LOAD),
-      filter((a, $) => questionairesNorAlreadyFetched(state$.value)),
-      switchMap((a) => this.service.getAll().pipe(
-        map(data => this.actions.loadSucceeded(data)),
-        catchError(res =>
-          of(this.actions.loadFailed({
-            status: '' + res.status,
-          }))),
-        startWith(this.actions.loadStarted()))));
-  }
+  loadQuestionnaire$ = createEffect(() => this.actions$.pipe(
+    ofType(fromActions.loadQuestionnaires),
+    concatMap(action => of(action).pipe(
+      withLatestFrom(this.store.pipe(select(s => s.ratings)))
+    )),
+    filter(([_, state]) => questionairesNorAlreadyFetched(state)),
+    switchMap(([, _]) =>
+      this.service.getAll().pipe(
+        map(data => fromActions.loadQuestionnairesSucceeded({ payload: data })),
+        catchError(res => of(
+          fromActions.loadQuestionnairesFailed({
+            payload: {
+              status: '' + res.status,
+            },
+            error: true
+          }),
+        )))
+    )));
 }

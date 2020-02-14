@@ -1,56 +1,49 @@
 import { Injectable } from '@angular/core';
-import { Epic } from 'redux-observable-es6-compat';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Store, select } from '@ngrx/store';
 
 import { of } from 'rxjs';
-import { catchError, filter, map, startWith, switchMap } from 'rxjs/operators';
+import { catchError, filter, map, switchMap, withLatestFrom, concatMap } from 'rxjs/operators';
 
 import { AppState } from '../store/model';
-import { IStreet, IStreetError } from './model';
-import { StreetAPIAction, StreetAPIActions } from './actions';
+import { IStreetState } from './model';
+import * as fromActions from './actions';
 import { StreetService } from './street.service';
 
 const citiesNotAlreadyFetched = (
-  state: AppState,
+  state: IStreetState,
 ): boolean =>
   (
-    state.streets &&
-    !state.streets.fetched &&
-    !state.streets.loading &&
-    state.streets.items.length === 0
+    state && (
+      !state.fetched ||
+      !state.loading ||
+      state.items.length === 0
+    )
   );
 
-
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class StreetEpics {
   constructor(
     private service: StreetService,
-    private actions: StreetAPIActions,
+    private store: Store<AppState>,
+    private actions$: Actions,
   ) { }
 
-  createEpic() {
-    return this.createLoadEpic();
-  }
-
-  private createLoadEpic(): Epic<
-    StreetAPIAction<IStreet[] | IStreetError>,
-    StreetAPIAction<IStreet[] | IStreetError>,
-    AppState
-  > {
-    return (action$, state$) =>
-      action$.pipe(
-        filter((a) => a.type === StreetAPIActions.LOAD),
-        filter(() => citiesNotAlreadyFetched(state$.value)),
-        switchMap(() =>
-          this.service.getAll().pipe(
-            map(data => this.actions.loadSucceeded(data)),
-            catchError(res => of(
-              this.actions.loadFailed({
-                status: '' + res.status,
-              }),
-            )),
-            startWith(this.actions.loadStarted()))
-        ));
-  }
+  loadStreets$ = createEffect(() => this.actions$.pipe(
+    ofType(fromActions.load),
+    concatMap(action => of(action).pipe(
+      withLatestFrom(this.store.pipe(select(s => s.streets)))
+    )),
+    filter(([_, state]) => citiesNotAlreadyFetched(state)),
+    switchMap(([, _]) =>
+      this.service.getAll().pipe(
+        map(data => fromActions.loadSuccess({ payload: data })),
+        catchError(res => of(
+          fromActions.loadFailed({
+            payload: {
+              status: '' + res.status,
+            }
+          }),
+        )))
+    )));
 }

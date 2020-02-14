@@ -2,6 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StreetInputComponent } from './street-input/street-input.component';
 import { MaterialModule } from '../material.module';
+import { EffectsModule } from '@ngrx/effects';
+import { StreetEpics } from './epics';
+import { StoreModule } from '@ngrx/store';
+import { streetReducer } from './reducer';
 
 
 
@@ -9,7 +13,9 @@ import { MaterialModule } from '../material.module';
   declarations: [StreetInputComponent],
   imports: [
     CommonModule,
-    MaterialModule
+    MaterialModule,
+    // StoreModule.forFeature('street', streetReducer),
+    EffectsModule.forFeature([StreetEpics])
   ],
   exports: [
     StreetInputComponent

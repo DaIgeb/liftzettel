@@ -1,56 +1,50 @@
 import { Injectable } from '@angular/core';
-import { Epic } from 'redux-observable-es6-compat';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Store, select } from '@ngrx/store';
 
 import { of } from 'rxjs';
-import { catchError, filter, map, startWith, switchMap } from 'rxjs/operators';
+import { catchError, filter, map, switchMap, withLatestFrom, concatMap } from 'rxjs/operators';
+
 
 import { AppState } from '../store/model';
-import { IState, IStateError } from './model';
-import { StateAPIAction, StateAPIActions } from './actions';
+import { IStateState } from './model';
+import * as fromActions from './actions';
 import { StateService } from './state.service';
 
 const notAlreadyFetched = (
-  state: AppState,
+  state: IStateState,
 ): boolean =>
   (
-    state.states &&
-    !state.states.fetched &&
-    !state.states.loading &&
-    state.states.items.length === 0
+    state && (
+      !state.fetched ||
+      !state.loading ||
+      state.items.length === 0
+    )
   );
 
-
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class StateEpics {
   constructor(
     private service: StateService,
-    private actions: StateAPIActions,
+    private store: Store<AppState>,
+    private actions$: Actions,
   ) { }
 
-  createEpic() {
-    return this.createLoadEpic();
-  }
-
-  private createLoadEpic(): Epic<
-    StateAPIAction<IState[] | IStateError>,
-    StateAPIAction<IState[] | IStateError>,
-    AppState
-  > {
-    return (action$, state$) =>
-      action$.pipe(
-        filter((a) => a.type === StateAPIActions.LOAD),
-        filter(() => notAlreadyFetched(state$.value)),
-        switchMap(() =>
-          this.service.getAll().pipe(
-            map(data => this.actions.loadSucceeded(data)),
-            catchError(res => of(
-              this.actions.loadFailed({
-                status: '' + res.status,
-              }),
-            )),
-            startWith(this.actions.loadStarted()))
-        ));
-  }
+  loadStreets$ = createEffect(() => this.actions$.pipe(
+    ofType(fromActions.load),
+    concatMap(action => of(action).pipe(
+      withLatestFrom(this.store.pipe(select(s => s.states)))
+    )),
+    filter(([_, state]) => notAlreadyFetched(state)),
+    switchMap(([, _]) =>
+      this.service.getAll().pipe(
+        map(data => fromActions.loadSuccess({ payload: data })),
+        catchError(res => of(
+          fromActions.loadFailed({
+            payload: {
+              status: '' + res.status,
+            }
+          }),
+        )))
+    )));
 }

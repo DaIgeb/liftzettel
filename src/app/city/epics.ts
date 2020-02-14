@@ -1,56 +1,50 @@
 import { Injectable } from '@angular/core';
-import { Epic } from 'redux-observable-es6-compat';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Store, select } from '@ngrx/store';
 
 import { of } from 'rxjs';
-import { catchError, filter, map, startWith, switchMap } from 'rxjs/operators';
+import { catchError, filter, map, startWith, switchMap, concatMap, withLatestFrom } from 'rxjs/operators';
 
 import { AppState } from '../store/model';
-import { ICity, ICityError } from './model';
-import { CityAPIAction, CityAPIActions } from './actions';
+import { ICity, ICityError, ICityState } from './model';
+import * as fromActions from './actions';
 import { CityService } from './city.service';
 
 const citiesNotAlreadyFetched = (
-  state: AppState,
+  state: ICityState,
 ): boolean =>
   (
-    state.cities &&
-    !state.cities.fetched &&
-    !state.cities.loading &&
-    state.cities.items.length === 0
+    state && (
+      !state.fetched ||
+      !state.loading ||
+      state.items.length === 0
+    )
   );
 
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class CityEpics {
   constructor(
     private service: CityService,
-    private actions: CityAPIActions,
+    private store: Store<AppState>,
+    private actions$: Actions,
   ) { }
 
-  createEpic() {
-    return this.createLoadEpic();
-  }
-
-  private createLoadEpic(): Epic<
-    CityAPIAction<ICity[] | ICityError>,
-    CityAPIAction<ICity[] | ICityError>,
-    AppState
-  > {
-    return (action$, state$) =>
-      action$.pipe(
-        filter((a) => a.type === CityAPIActions.LOAD),
-        filter(() => citiesNotAlreadyFetched(state$.value)),
-        switchMap(() =>
-          this.service.getAll().pipe(
-            map(data => this.actions.loadSucceeded(data)),
-            catchError(res => of(
-              this.actions.loadFailed({
-                status: '' + res.status,
-              }),
-            )),
-            startWith(this.actions.loadStarted()))
-        ));
-  }
+  loadCities$ = createEffect(() => this.actions$.pipe(
+    ofType(fromActions.LOAD),
+    concatMap(action => of(action).pipe(
+      withLatestFrom(this.store.pipe(select(s => s.cities)))
+    )),
+    filter(([_, state]) => citiesNotAlreadyFetched(state)),
+    switchMap(([, _]) =>
+      this.service.getAll().pipe(
+        map(data => fromActions.loadSuccess({ payload: data })),
+        catchError(res => of(
+          fromActions.loadFailed({
+            payload: {
+              status: '' + res.status,
+            }
+          }),
+        )))
+    )));
 }

@@ -5,6 +5,8 @@ import { MaterialModule } from '../material.module';
 import { RouterModule } from '@angular/router';
 import { ArrangementCreateComponent } from './arrangement-create/arrangement-create.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { EffectsModule } from '@ngrx/effects';
+import { ArrangementEpics } from './epics';
 
 
 
@@ -14,6 +16,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     RouterModule,
     MaterialModule,
     ReactiveFormsModule,
+    EffectsModule.forFeature([ArrangementEpics]),
     CommonModule
   ],
   exports: [ArrangementListComponent]

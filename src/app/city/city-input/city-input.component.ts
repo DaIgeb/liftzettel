@@ -2,11 +2,10 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Observable, combineLatest } from 'rxjs';
 import { ICity, isCity } from '../model';
 import { FormControl, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
-import { NgRedux } from '@angular-redux/store';
+import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/store/model';
-import { CityAPIActions } from '../actions';
-import { filter, first, map, tap } from 'rxjs/operators';
-import { IState } from 'src/app/state/model';
+import * as fromActions from '../actions';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-city-input',
@@ -21,7 +20,6 @@ import { IState } from 'src/app/state/model';
 })
 export class CityInputComponent implements OnInit, ControlValueAccessor {
   private onChanged: any = () => { }
-  private onTouched: any = () => { }
 
   filteredCities$: Observable<ICity[]>;
   city = new FormControl('Zürich');
@@ -30,13 +28,11 @@ export class CityInputComponent implements OnInit, ControlValueAccessor {
   state$: Observable<string>;
 
   constructor(
-    private store: NgRedux<AppState>,
-    private cityActions: CityAPIActions
-
+    private store: Store<AppState>
   ) { }
 
   ngOnInit() {
-    this.store.dispatch(this.cityActions.load());
+    this.store.dispatch(fromActions.load());
     this.city.valueChanges.subscribe(v => this.onChanged(isCity(v) ? v.code : undefined));
     
     const availableCities$ = combineLatest(this.store.select(s => s.cities.items), this.state$).pipe(
@@ -67,7 +63,6 @@ export class CityInputComponent implements OnInit, ControlValueAccessor {
     this.onChanged = fn
   }
   registerOnTouched(fn: any) {
-    this.onTouched = fn
   }
 
   displayCity(city: ICity) {

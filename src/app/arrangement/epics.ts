@@ -1,101 +1,73 @@
 import { Injectable } from '@angular/core';
-import { Epic, combineEpics } from 'redux-observable-es6-compat';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Store, select } from '@ngrx/store';
 
-import { of } from 'rxjs';
-import { catchError, filter, map, startWith, switchMap } from 'rxjs/operators';
+import { of, EMPTY } from 'rxjs';
+import { catchError, filter, map, switchMap, concatMap, withLatestFrom, tap } from 'rxjs/operators';
 
 import { AppState } from '../store/model';
-import { IArrangement, IArrangementError } from './model';
-import { ArrangementAPIAction, ArrangementAPIActions } from './actions';
+import { IArrangementState } from './model';
+import * as fromActions from './actions';
 import { ArrangementService } from './arrangement.service';
-import { FluxStandardAction } from 'flux-standard-action';
-import { UPDATE_LOCATION } from '@angular-redux/router';
+import { Router } from '@angular/router';
 
 const notAlreadyFetched = (
-  state: AppState,
+  state: IArrangementState,
 ): boolean =>
   (
-    state.arrangements &&
-    !state.arrangements.fetched &&
-    !state.arrangements.loading &&
-    state.arrangements.items.length === 0
+    state && (
+      !state.fetched ||
+      !state.loading ||
+      state.items.length === 0
+    )
   );
 
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class ArrangementEpics {
   constructor(
     private service: ArrangementService,
-    private actions: ArrangementAPIActions,
+    private store: Store<AppState>,
+    private actions$: Actions,
+    private router: Router
   ) { }
 
-  createEpic() {
-    return combineEpics(
-      this.createLoadEpic(),
-      this.createCreateEpic(),
-      this.redirectToCreateRatingEpic()
-    );
-  }
+  loadArrangements$ = createEffect(() => this.actions$.pipe(
+    ofType(fromActions.loadArrangements),
+    concatMap(action => of(action).pipe(
+      withLatestFrom(this.store.pipe(select(s => s.arrangements)))
+    )),
+    filter(([_, state]) => notAlreadyFetched(state)),
+    switchMap(([, _]) =>
+      this.service.getAll().pipe(
+        map(data => fromActions.loadSucceeded({ payload: data })),
+        catchError(res => of(
+          fromActions.loadFailed({
+            payload: {
+              status: '' + res.status,
+            }
+          }),
+        )))
+    )));
 
-  private createLoadEpic(): Epic<
-    ArrangementAPIAction<IArrangement[] | IArrangementError>,
-    ArrangementAPIAction<IArrangement[] | IArrangementError>,
-    AppState
-  > {
-    return (action$, state$) =>
-      action$.pipe(
-        filter((a) => a.type === ArrangementAPIActions.LOAD),
-        filter(() => notAlreadyFetched(state$.value)),
-        switchMap(() =>
-          this.service.getAll().pipe(
-            map(data => this.actions.loadSucceeded(data)),
-            catchError(res => of(
-              this.actions.loadFailed({
-                status: '' + res.status,
-              }),
-            )),
-            startWith(this.actions.loadStarted()))
-        ));
-  }
+  createArrangements$ = createEffect(() => this.actions$.pipe(
+    ofType(fromActions.createArrangements),
+    switchMap((a) =>
+      this.service.create(a.payload).pipe(
+        map(data => fromActions.createArrangementsSuccess({ payload: data })),
+        catchError(res => of(
+          fromActions.createFailed({
+            payload: {
+              status: '' + res.status,
+            }
+          }),
+        ))
+      )))
+  );
 
-
-  private createCreateEpic(): Epic<
-    ArrangementAPIAction<IArrangement[] | IArrangementError> | FluxStandardAction<string, string, {}>,
-    ArrangementAPIAction<IArrangement[] | IArrangementError> | FluxStandardAction<string, string, {}>,
-    AppState
-  > {
-    return (action$, state$) =>
-      action$.pipe(
-        filter((a) => a.type === ArrangementAPIActions.CREATE),
-        switchMap((a) =>
-          this.service.create(a.payload as IArrangement[]).pipe(
-            map(data => this.actions.createSucceeded(data)),
-            catchError(res => of(
-              this.actions.createFailed({
-                status: '' + res.status,
-              }),
-            )),
-            startWith(this.actions.createStarted()))
-        ));
-  }
-
-  private redirectToCreateRatingEpic(): Epic<
-    ArrangementAPIAction<IArrangement[] | IArrangementError> | FluxStandardAction<string, string, {}>,
-    ArrangementAPIAction<IArrangement[] | IArrangementError> | FluxStandardAction<string, string, {}>,
-    AppState
-  > {
-    return (action$, state$) =>
-      action$.pipe(
-        filter((a) => a.type === ArrangementAPIActions.CREATE_SUCCEEDED),
-        map((a) =>
-          ({
-            type: UPDATE_LOCATION,
-            meta: {},
-            payload: 'rating/' + a.payload[0].code + '/new',
-          }))
-      );
-  }
-
+  redirectToRating$ = createEffect(() => this.actions$.pipe(
+    ofType(fromActions.createArrangementsSuccess),
+    tap(a => this.router.navigate(['rating/' + a.payload[0].code + '/new'])),
+    switchMap(() => EMPTY
+    )));
 }

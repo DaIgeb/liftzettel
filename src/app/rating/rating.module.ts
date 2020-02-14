@@ -6,6 +6,9 @@ import { RatingCreateComponent } from './rating-create/rating-create.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { RatingQuestionsComponent } from './rating-questions/rating-questions.component';
+import { EffectsModule } from '@ngrx/effects';
+import { RatingEpics } from './RatingEpics';
+import { QuestionaireEpics } from './QuestionaireEpics';
 
 
 
@@ -16,7 +19,8 @@ import { RatingQuestionsComponent } from './rating-questions/rating-questions.co
     ReactiveFormsModule,
     FormsModule,
     CommonModule,
-    SharedModule
+    SharedModule,
+    EffectsModule.forFeature([RatingEpics, QuestionaireEpics])
   ],
   exports: [
     // ListComponent

@@ -1,46 +1,44 @@
-import { Action } from 'redux';
+import { createReducer, on } from '@ngrx/store';
 
-import { IEnclosureState, initialState } from './model';
-import { EnclosureAPIAction, EnclosureAPIActions } from './actions';
+import { initialState } from './model';
+import * as fromActions from './actions';
 
-export function enclosureReducer(
-  state: IEnclosureState = initialState,
-  a: Action,
-): IEnclosureState {
-  const action = a as EnclosureAPIAction;
-  switch (action.type) {
-    case EnclosureAPIActions.LOAD_STARTED:
-      return {
-        ...state,
-        items: [],
-        loading: true,
-        fetched: false,
-        error: undefined,
-      };
-    case EnclosureAPIActions.LOAD_SUCCEEDED:
-      return {
-        ...state,
-        items: action.payload,
-        loading: false,
-        fetched: true,
-        error: undefined,
-      };
-    case EnclosureAPIActions.LOAD_FAILED:
-      return {
-        ...state,
-        items: [],
-        fetched: false,
-        loading: false,
-        error: action.error,
-      };
-      case EnclosureAPIActions.SAVE_SUCCEEDED: {
-        return {
-          ...state,
-          fetched: false,
-          loading: false
-        }
-      }
-  }
-
-  return state;
-};
+export const enclosureReducer = createReducer(
+  initialState,
+  on(fromActions.load, (state) => (
+    {
+      ...state,
+      items: [],
+      loading: true,
+      fetched: false,
+      error: undefined,
+    }
+  )),
+  on(fromActions.loadSuccess, (state, action) => (
+    {
+      ...state,
+      items: action.payload,
+      loading: false,
+      fetched: true,
+      error: undefined,
+    }
+  )),
+  on(fromActions.loadFailed, (state) => (
+    {
+      ...state,
+      items: [],
+      fetched: false,
+      loading: false,
+      error: true
+    }
+  )),
+  on(fromActions.createSuccess, (state) => (
+    {
+      ...state,
+      items: [],
+      fetched: false,
+      loading: false,
+      error: undefined
+    }
+  ))
+);

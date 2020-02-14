@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, combineLatest } from 'rxjs';
-import { NgRedux } from '@angular-redux/store';
+import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/store/model';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { QuestionaireAPIActions } from 'src/app/rating/questionaire.actions';
+import * as fromActions from 'src/app/rating/questionaire.actions';
 import { map, tap } from 'rxjs/operators';
 import { FormGroup, FormControl, FormArray } from '@angular/forms';
 import { IQuestionaire } from 'src/app/rating/model';
@@ -26,14 +26,13 @@ export class QuestionaireComponent implements OnInit {
   questionnaire: import("c:/dev/liftzettel/src/app/rating/model").IQuestionaire;
 
   constructor(
-    private store: NgRedux<AppState>,
+    private store: Store<AppState>,
     private route: ActivatedRoute,
-    private questionaireActions: QuestionaireAPIActions,
 
   ) { }
 
   ngOnInit() {
-    this.questionaireActions.load();
+    this.store.dispatch(fromActions.loadQuestionnaires());
 
     this.id$ = this.route.paramMap.pipe(
       map((params: ParamMap) =>

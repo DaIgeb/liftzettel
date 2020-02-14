@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { ArrangementAPIActions } from '../actions';
+import * as fromActions from '../actions';
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/store/model';
 
 @Component({
   selector: 'app-arrangement-create',
@@ -18,20 +20,22 @@ export class ArrangementCreateComponent implements OnInit {
   });
 
   constructor(
-    private arrangementActions: ArrangementAPIActions
+    private store: Store<AppState>
   ) { }
 
   ngOnInit() {
   }
 
   createArrangement() {
-    this.arrangementActions.create([
-      {
-        parent: this.enclosureId,
-        code: this.enclosureId + ':$:1',
-        name: this.name.value
-      }
-    ]);
+    this.store.dispatch(fromActions.createArrangements({
+      payload: [
+        {
+          parent: this.enclosureId,
+          code: this.enclosureId + ':$:1',
+          name: this.name.value
+        }
+      ]
+    }));
   }
 
 }
