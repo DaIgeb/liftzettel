@@ -113,7 +113,7 @@ export class HomeComponent implements OnInit {
         payload: [{
           parent: filter,
           name: 'Foo',
-          code: filter + ':$:1'
+          code: filter
         }]
       }));
     }

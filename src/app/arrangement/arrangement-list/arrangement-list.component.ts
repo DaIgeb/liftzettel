@@ -32,7 +32,7 @@ export class ArrangementListComponent implements OnInit {
         decodeURIComponent(params.get('id')))
     );
 
-    this.enclosure$ = combineLatest(this.id$, this.store.select(s => s.enclosures.items)).pipe(map(d => d[1].find(e => e.code = d[0])))
+    this.enclosure$ = combineLatest(this.id$, this.store.select(s => s.enclosures.items)).pipe(map(d => d[1].find(e => e.code === d[0])))
     this.id$ = this.route.paramMap.pipe(
       map((params: ParamMap) =>
         decodeURIComponent(params.get('id')))

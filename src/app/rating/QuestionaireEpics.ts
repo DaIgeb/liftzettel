@@ -13,9 +13,11 @@ const questionairesNorAlreadyFetched = (
   state: IRatingState,
 ): boolean =>
   (
-    state &&
-    !state.questionaires.fetched &&
-    !state.questionaires.loading
+    state && state.questionaires && (
+      !state.questionaires.fetched ||
+      !state.questionaires.loading ||
+      state.questionaires.items.length === 0
+    )
   );
 
 @Injectable()
