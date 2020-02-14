@@ -33,7 +33,7 @@ export class CommentComponent implements OnInit, ControlValueAccessor {
 
   constructor(private _ngZone: NgZone) { }
 
-  @ViewChild('autosize', { static: false }) autosize: CdkTextareaAutosize;
+  @ViewChild('autosize') autosize: CdkTextareaAutosize;
 
   triggerResize() {
     // Wait for changes to be applied, then trigger textarea resize.
