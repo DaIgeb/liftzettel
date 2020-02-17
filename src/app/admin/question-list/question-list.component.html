@@ -1,7 +1,6 @@
 <div [formGroup]="formGroup">
   <div formArrayName="questions" *ngFor="let item of questionsControl.controls; let i = index;">
     <div [formGroupName]="i">
-      {{questionsControl.controls[i].get('question').value | json}}
       <app-question formControlName="question"></app-question>
     </div>
   </div>

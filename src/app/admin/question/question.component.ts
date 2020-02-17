@@ -20,29 +20,32 @@ export class QuestionComponent implements OnInit, ControlValueAccessor {
     "date"
   ]
 
-  @Input()
-  question: TQuestion;
-
+  typeControl = new FormControl();
+  requiredControl = new FormControl();
+  allowCommentsControl = new FormControl();
+  titleControl = new FormControl();
+  keyControl = new FormControl();
+  questionControl = new FormControl();
+  questionPayloadControl = new FormControl();
+  key: string;
+  
   formGroup = new FormGroup({
-    key: new FormControl(),
-    title: new FormControl(),
-    type: new FormControl(),
-    required: new FormControl(),
-    allowComments: new FormControl()
+    key: this.keyControl,
+    title: this.titleControl,
+    question: this.questionControl,
+    type: this.typeControl,
+    required: this.requiredControl,
+    allowComments: this.allowCommentsControl,
+    payload: this.questionPayloadControl
   });
 
-  questionControl = new FormControl();
-  typeControl = new FormControl();
-  titleControl = new FormControl();
-  key: string;
   private _onChange = (obj: any) => { };
 
   constructor() { }
 
   ngOnInit() {
-    this.questionControl.valueChanges.subscribe(v => this._onChange(v));
+    this.formGroup.valueChanges.subscribe(v => this._onChange(v));
   }
-
 
   registerOnChange(fn: any): void {
     this._onChange = fn;
@@ -50,9 +53,16 @@ export class QuestionComponent implements OnInit, ControlValueAccessor {
 
   writeValue(obj: any): void {
     if (this.isQuestion(obj)) {
+      const {key, question, title, required, type, allowComments, ...rest} = obj;
       this.key = obj.key || obj.title;
-      this.formGroup.patchValue(obj);
 
+      this.allowCommentsControl.patchValue(allowComments);
+      this.requiredControl.patchValue(required);
+      this.titleControl.patchValue(title);
+      this.keyControl.patchValue(this.key);
+      this.questionControl.patchValue(question);
+      this.typeControl.patchValue(type);
+      this.questionPayloadControl.patchValue(rest);
     }
   }
 

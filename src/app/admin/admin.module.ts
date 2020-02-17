@@ -9,10 +9,11 @@ import { QuestionListComponent } from './question-list/question-list.component';
 import { QuestionComponent } from './question/question.component';
 import { QuestionaireComponent } from './questionaire/questionaire.component';
 import { FormsModule } from '@angular/forms';
+import { QuestionRatingComponent } from './question-rating/question-rating.component';
 
 
 @NgModule({
-  declarations: [DashboardComponent, QuestionnaireListComponent, QuestionListComponent, QuestionComponent, QuestionaireComponent],
+  declarations: [DashboardComponent, QuestionnaireListComponent, QuestionListComponent, QuestionComponent, QuestionaireComponent, QuestionRatingComponent],
   imports: [
     CommonModule,
     AdminRoutingModule,
