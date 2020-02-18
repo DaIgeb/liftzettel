@@ -25,7 +25,12 @@ export class QuestionListComponent implements OnInit, ControlValueAccessor {
   ) { }
 
   ngOnInit() {
-    this.questionsControl.valueChanges.subscribe(v => this._onChange(v));
+    this.questionsControl.valueChanges.subscribe(v => {
+      if (isArray(v))
+        return this._onChange(
+          (v || []).map(q => ({ ...q.question }))
+        );
+    });
   }
 
   registerOnChange(fn: any): void {
@@ -42,5 +47,9 @@ export class QuestionListComponent implements OnInit, ControlValueAccessor {
   }
 
   registerOnTouched(fn: any): void {
+  }
+
+  addQuestion() {
+    this.questionsControl.push(new FormGroup({ question: new FormControl({}) }));
   }
 }

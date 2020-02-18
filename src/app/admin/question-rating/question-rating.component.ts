@@ -13,8 +13,8 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormGroup, FormControl } from 
 })
 export class QuestionRatingComponent implements OnInit, ControlValueAccessor {
   formGroup = new FormGroup({
-    min: new FormControl(),
-    max: new FormControl()
+    min: new FormControl('1'),
+    max: new FormControl('10')
   });
 
   private _onChange = (obj: any) => { };

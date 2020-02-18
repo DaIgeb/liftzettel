@@ -44,7 +44,13 @@ export class QuestionComponent implements OnInit, ControlValueAccessor {
   constructor() { }
 
   ngOnInit() {
-    this.formGroup.valueChanges.subscribe(v => this._onChange(v));
+    this.formGroup.valueChanges.subscribe(v => {
+      const {payload, ...rest} = v
+      return this._onChange({
+        ...rest,
+        ...payload
+      });
+    });
   }
 
   registerOnChange(fn: any): void {

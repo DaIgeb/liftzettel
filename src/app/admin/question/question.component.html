@@ -1,38 +1,45 @@
-<div [formGroup]="formGroup">
-  <h2>{{titleControl.value}}</h2>
-  <mat-form-field>
-    <input matInput formControlName="title" placeholder="Title">
-  </mat-form-field>
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      {{titleControl.value}}
 
-  <mat-form-field>
-    <input matInput formControlName="question" placeholder="Question">
-  </mat-form-field>
+    </mat-panel-title>
+  </mat-expansion-panel-header>
 
-  <label id="question-type">Pick the question type</label>
-  <mat-radio-group aria-labelledby="question-type" formControlName="type">
-    <mat-radio-button *ngFor="let type of types" [value]="type">
-      {{type}}
-    </mat-radio-button>
-  </mat-radio-group>
+  <div [formGroup]="formGroup">
+    <mat-form-field>
+      <input matInput formControlName="key" placeholder="Key">
+    </mat-form-field>
 
-  <div [ngSwitch]="typeControl.value">
-    <div *ngSwitchCase="'rating'">
-      <app-question-rating formControlName="payload"></app-question-rating>
-      <mat-form-field>
-        <input matInput formControlName="title" placeholder="min">
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput formControlName="title" placeholder="max">
-      </mat-form-field>
+    <mat-form-field>
+      <input matInput formControlName="title" placeholder="Title">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput formControlName="question" placeholder="Question">
+    </mat-form-field>
+
+    <label id="question-type">Pick the question type</label>
+    <mat-radio-group aria-labelledby="question-type" formControlName="type">
+      <mat-radio-button *ngFor="let type of types" [value]="type">
+        {{type}}
+      </mat-radio-button>
+    </mat-radio-group>
+    <mat-slide-toggle formControlName="allowComments">
+      Allow comments
+    </mat-slide-toggle>
+
+    <mat-slide-toggle formControlName="required">
+      Required
+    </mat-slide-toggle>
+
+
+    <div [ngSwitch]="typeControl.value">
+      <div *ngSwitchCase="'rating'">
+        <app-question-rating formControlName="payload"></app-question-rating>
+      </div>
     </div>
+
+
   </div>
-
-  <mat-slide-toggle formControlName="allowComments">
-    Allow comments
-  </mat-slide-toggle>
-
-  <mat-slide-toggle formControlName="required">
-    Required
-  </mat-slide-toggle>
-
-</div>
+</mat-expansion-panel>

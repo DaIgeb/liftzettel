@@ -47,6 +47,10 @@ export class QuestionaireComponent implements OnInit {
     });
   }
 
+  submit() {
+    console.error(this.formGroup.value);
+  }
+
   private loadQuestionnaire(questionnaire: IQuestionaire) {
     if (questionnaire) {
       this.name.patchValue(questionnaire.name);
